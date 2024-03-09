@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,10 +36,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::post('/verifyCode', [UserController::class, 'verifyCode'])
-->name('Users.verifyCode');
+    ->name('Users.verifyCode');
 
-Route::get('/getCode', [UserController::class, 'getCode'])
-->name('Users.getCode');
+Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
+    ->name('Users.getCode')
+    ->where('userId', '[0-9]+');
 
-
+Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
+    ->name('EmailVerification.sendVerifyCodeEmail')
+    ->where('userId', '[0-9]+');
 
