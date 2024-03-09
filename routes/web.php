@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::any('/email/verify/{id}', [EmailVerificationController::class, 'verify_email'])->name('verification');
+Route::any('/email/verify/{user_id}', [EmailVerificationController::class, 'verify_email'])->name('verification')->where('user_id', '[0-9]+');

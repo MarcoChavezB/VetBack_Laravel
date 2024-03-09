@@ -64,20 +64,23 @@ class EmailVerification extends Mailable
 
     public function build()
     {
-        while (true) {
+        /*while (true) {
             $newToken = Str::random(64);
-            $token = EmailVerificationToken::where('token', hash('sha256', $newToken))->whereNotNull('token')->first();
+            $token = EmailVerificationToken::where('token', bcrypt($newToken))->whereNotNull('token')->first();
 
             if (!$token) {
                 break;
             }
-        }
+        }*/
+
+        $newToken = Str::random(64);
 
         $token = new EmailVerificationToken();
-        $token->token = hash('sha256', $newToken);
+        $token->token = bcrypt($newToken);
+        $token->user_id = $this->user->id;
         $token->save();
 
-        $url = URL::signedRoute('verification', ['id' => $this->user->id, 'token' => $newToken]);
+        $url = URL::signedRoute('verification', ['user_id' => $this->user->id, 'token' => $newToken]);
 
         return $this->view('emails.EmailVerificationView', ['url' => $url])
             ->with([
