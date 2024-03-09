@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    function verifyCode() {
-        return "funciona";
+    function verifyCode(Request $request) {
+        
     }
 }
