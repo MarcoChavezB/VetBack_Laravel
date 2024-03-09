@@ -23,21 +23,42 @@ class UserController extends Controller
 
     function verifyCode(Request $request) {
 
-        // if(!User::find($usuario_id)){
-        //     return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
-        // }
+        $validator = Validator::make($request->all(), [
+            'codigo' => 'required|min:6|max:6',
+            'userId' => 'required|integer'
+        ],
+        [
+            'codigo.required' => 'El código es requerido',
+            'codigo.min' => 'El código debe tener 6 caracteres',
+            'codigo.max' => 'El código debe tener 6 caracteres',
+            'userId.required' => 'El userId es requerido',
+            'userId.integer' => 'El userId debe ser un número entero'
+        ]);
 
-        // if(!Cache::has('codigo_' . $usuario_id)){
-        //     return response()->json(['mensaje' => 'Codigo no valido', "userId" => $codigo_ingresado], 400);
-        // }
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()
+            ], 400);
+        }
 
-        // $codigo_guardado = Cache::get('codigo_' . $usuario_id);
+        $usuario_id = $request->userId;
+        $codigo_ingresado = $request->codigo;
 
-        // if ($codigo_guardado && $codigo_guardado == $codigo_ingresado) {
-        //     Cache::forget('codigo_' . $usuario_id);
-        //     return response()->json(['mensaje' => 'Código válido']);
-        // }
-        // return response()->json(['mensaje' => 'Código inválido'], 400);
+        if(!User::find($usuario_id)){
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+
+        if(!Cache::has('codigo_' . $usuario_id)){
+            return response()->json(['mensaje' => 'Codigo no valido'], 400);
+        }
+
+        $codigo_guardado = Cache::get('codigo_' . $usuario_id);
+
+        if ($codigo_guardado && $codigo_guardado == $codigo_ingresado) {
+            Cache::forget('codigo_' . $usuario_id);
+            return response()->json(['mensaje' => 'Código válido']);
+        }
+        return response()->json(['mensaje' => 'Código inválido'], 400);
     }
 
     public function register(Request $request){
