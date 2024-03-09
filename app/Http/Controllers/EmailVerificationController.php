@@ -48,9 +48,9 @@ class EmailVerificationController extends Controller
         return view('emails.EmailVerificationSuccess');
     }
 
-    function sendVerifyCodeEmail(){
-        $email = "marco1102004@gmail.com";
-        $codigo = $this->userController->getCode(1);
+    function sendVerifyCodeEmail($userId){
+        $codigo = $this->userController->getCode($userId);
+        $email = User::find($userId)->email;
         Mail::to($email)->send((new MailEmailCodeVerification($codigo))->build());
     }
 }

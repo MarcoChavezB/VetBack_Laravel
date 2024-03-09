@@ -27,6 +27,6 @@ Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
     ->name('Users.getCode')
     ->where('userId', '[0-9]+');
 
-Route::get('/email/verify/code', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
+Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
     ->name('EmailVerification.sendVerifyCodeEmail');
 
