@@ -49,8 +49,15 @@ class EmailVerificationController extends Controller
     }
 
     function sendVerifyCodeEmail($userId){
+        if (!User::find($userId)){
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+        if(User::find($userId)->code_verified){
+            return response()->json(['mensaje' => 'El usuario ya ha sido verificado'], 400);
+        }
+        $user = User::find($userId);
         $codigo = $this->userController->getCode($userId);
-        $email = User::find($userId)->email;
+        $email = $user->email;
         Mail::to($email)->send((new MailEmailCodeVerification($codigo))->build());
     }
 }

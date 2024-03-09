@@ -28,5 +28,6 @@ Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
     ->where('userId', '[0-9]+');
 
 Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
-    ->name('EmailVerification.sendVerifyCodeEmail');
+    ->name('EmailVerification.sendVerifyCodeEmail')
+    ->where('userId', '[0-9]+');
 
