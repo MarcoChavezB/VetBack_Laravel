@@ -16,8 +16,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::any('/authenticate', function (Request $request) {
+    return response()->json(['error' => 'Token inválido'], 401);
+
+})->name('error');
+
+Route::post('/store', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::get('/authenticatetoken', function () {
+        return response()->json([
+            'status' => true
+        ]);
+    });
+
+    Route::get('/logout', [UserController::class, 'logout']);
 });
 
 Route::post('/verifyCode', [UserController::class, 'verifyCode'])

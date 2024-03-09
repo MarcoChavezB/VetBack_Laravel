@@ -10,7 +10,8 @@ class EmailVerificationToken extends Model
     use HasFactory;
 
     protected $fillable= [
-        'token'
+        'token',
+        'user_id',
     ];
 
 }
