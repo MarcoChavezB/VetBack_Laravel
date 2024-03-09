@@ -20,7 +20,19 @@ class UserController extends Controller
     function verifyCode(Request $request) {
         $usuario_id = $request->input('userId');
         $codigo_ingresado = $request->input('codigo');
+        
+        if(!$usuario_id || !$codigo_ingresado){
+            return response()->json(['mensaje' => 'Datos inválidos'], 400);
+        }
 
+        if(!User::find($usuario_id)){
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+
+        if(!Cache::has('codigo_' . $usuario_id)){
+            return response()->json(['mensaje' => 'Código expirado'], 400);
+        }
+        
         $codigo_guardado = Cache::get('codigo_' . $usuario_id);
 
         if ($codigo_guardado && $codigo_guardado == $codigo_ingresado) {
