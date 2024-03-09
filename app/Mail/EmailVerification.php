@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\EmailVerificationToken;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,6 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class EmailVerification extends Mailable
@@ -62,8 +64,24 @@ class EmailVerification extends Mailable
 
     public function build()
     {
-        $token = Str::random(32);
+        while (true) {
+            $newToken = Str::random(64);
+            $token = EmailVerificationToken::where('token', hash('sha256', $newToken))->whereNotNull('token')->first();
 
+            if (!$token) {
+                break;
+            }
+        }
 
+        $token = new EmailVerificationToken();
+        $token->token = hash('sha256', $newToken);
+        $token->save();
+
+        $url = URL::signedRoute('verification', ['id' => $this->user->id, 'token' => $newToken]);
+
+        return $this->view('emails.EmailVerificationView', ['url' => $url])
+            ->with([
+                'url' => $url,
+            ]);
     }
 }

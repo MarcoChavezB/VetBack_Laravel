@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class EmailVerificationController extends Controller
 {
-    public function verify(Request $request, Int $user_id){
+    public function verify_email(Request $request, Int $user_id){
         if (!$request->hasValidSignature()) {
             return view('emails.EmailVerificationError');
         }
