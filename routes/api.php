@@ -20,10 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/verifyCode', [UserController::class, 'verifyCode'])
-->name('Users.verifyCode');
+    ->name('Users.verifyCode');
 
-Route::get('/getCode', [UserController::class, 'getCode'])
-->name('Users.getCode');
+Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
+    ->name('Users.getCode')
+    ->where('userId', '[0-9]+');
 
 
 
