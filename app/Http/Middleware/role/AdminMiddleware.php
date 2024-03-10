@@ -22,7 +22,10 @@ class AdminMiddleware
         if (!$user) {
             return response()->json(['msg' => 'Usuario no encontrado'], 404);
         };
-
+        
+        if ($user->role !== 'admin' ){
+            return response()->json(['msg' => 'No tienes los permisos necesarios'], 403);
+        }
 
         return $next($request);
     }
