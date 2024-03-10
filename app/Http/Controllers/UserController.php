@@ -22,19 +22,34 @@ class UserController extends Controller
     }
 
     function verifyCode(Request $request) {
-        $usuario_id = $request->input('userId');
-        $codigo_ingresado = $request->input('codigo');
 
-        if(!$usuario_id || !$codigo_ingresado){
-            return response()->json(['mensaje' => 'Datos inválidos'], 400);
+        $validator = Validator::make($request->all(), [
+            'codigo' => 'required|min:6|max:6',
+            'userId' => 'required|integer'
+        ],
+        [
+            'codigo.required' => 'El código es requerido',
+            'codigo.min' => 'El código debe tener 6 caracteres',
+            'codigo.max' => 'El código debe tener 6 caracteres',
+            'userId.required' => 'El userId es requerido',
+            'userId.integer' => 'El userId debe ser un número entero'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()
+            ], 400);
         }
+
+        $usuario_id = $request->userId;
+        $codigo_ingresado = $request->codigo;
 
         if(!User::find($usuario_id)){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
 
         if(!Cache::has('codigo_' . $usuario_id)){
-            return response()->json(['mensaje' => 'Código expirado'], 400);
+            return response()->json(['mensaje' => 'Codigo no valido'], 400);
         }
 
         $codigo_guardado = Cache::get('codigo_' . $usuario_id);

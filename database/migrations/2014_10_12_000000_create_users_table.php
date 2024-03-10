@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->boolean('email_verified')->default(false);
             $table->boolean('code_verified')->default(false);
+            $table->boolean('account_active')->default(true);
+            $table->enum('role', ['admin', 'user', 'guest'])->default('guest');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
