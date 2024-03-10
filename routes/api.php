@@ -51,6 +51,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 Route::post('/pet/store', [PetController::class, 'store']);
+Route::get('/pet/index/{id}', [PetController::class, 'getPetsByUser'])->where('id', '[0-9]+');
 Route::post('/specie/store', [SpecieController::class, 'store']);
 Route::get('/specie/index', [SpecieController::class, 'index']);
 Route::post('/vetappointment/store', [VetAppointmentController::class, 'store']);
