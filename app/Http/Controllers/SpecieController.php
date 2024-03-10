@@ -22,6 +22,13 @@ class SpecieController extends Controller
         $specie->save();
 
         return response()->json(["success" => true, "message"=>"Especie registrada correctamente"], 201);
+    }
 
+    public function index(){
+        $species = Specie::all();
+        if ($species->isEmpty()) {
+            return response()->json(['message' => 'No hay especies registradas'], 404);
+        }
+        return response()->json(['species' => $species], 200);
     }
 }

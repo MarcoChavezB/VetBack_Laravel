@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 Route::post('/pet/store', [PetController::class, 'store']);
 Route::post('/specie/store', [SpecieController::class, 'store']);
+Route::get('/specie/index', [SpecieController::class, 'index']);
 
 Route::post('/verifyCode', [UserController::class, 'verifyCode'])
     ->name('Users.verifyCode');
