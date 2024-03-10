@@ -4,6 +4,8 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\SpecieController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VetAppointmentController;
+use App\Http\Controllers\VetPrescriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +53,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::post('/pet/store', [PetController::class, 'store']);
 Route::post('/specie/store', [SpecieController::class, 'store']);
 Route::get('/specie/index', [SpecieController::class, 'index']);
+Route::post('/vetappointment/store', [VetAppointmentController::class, 'store']);
+Route::post('/vetprescription/store', [VetPrescriptionController::class, 'store']);
+Route::get('/vetappointment/index', [VetAppointmentController::class, 'index']);
+Route::get('/vetappointment/show/{id}', [VetAppointmentController::class, 'show'])->where('id', '[0-9]+');
+Route::put('/vetappointment/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
+Route::put('/vetappointment/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
 
 Route::post('/verifyCode', [UserController::class, 'verifyCode'])
     ->name('Users.verifyCode');
