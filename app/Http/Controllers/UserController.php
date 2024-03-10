@@ -17,12 +17,13 @@ class UserController extends Controller
 {
     function getCode($userId){
         $codigo = Str::random(6);
-        Cache::put('codigo_' . $userId, $codigo, Carbon::now()->addMinutes(1));
+        Cache::put('codigo_' . $userId, $codigo, Carbon::now()->addMinutes(100));
         return $codigo;
     }
 
-    function verifyCode(Request $request) {
 
+
+    function verifyCode(Request $request) {
         $validator = Validator::make($request->all(), [
             'codigo' => 'required|min:6|max:6',
             'userId' => 'required|integer'
@@ -34,32 +35,41 @@ class UserController extends Controller
             'userId.required' => 'El userId es requerido',
             'userId.integer' => 'El userId debe ser un número entero'
         ]);
-
+    
+        $validatorErrors = $validator->errors()->toArray();
+    
         if ($validator->fails()) {
             return response()->json([
-                'error' => $validator->errors()
+                'error' => $validatorErrors
             ], 400);
         }
-
+    
         $usuario_id = $request->userId;
         $codigo_ingresado = $request->codigo;
-
-        if(!User::find($usuario_id)){
+    
+        if (!User::find($usuario_id)) {
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
-
-        if(!Cache::has('codigo_' . $usuario_id)){
+    
+        if (!Cache::has('codigo_' . $usuario_id)) {
             return response()->json(['mensaje' => 'Codigo no valido'], 400);
         }
-
+    
         $codigo_guardado = Cache::get('codigo_' . $usuario_id);
-
+    
         if ($codigo_guardado && $codigo_guardado == $codigo_ingresado) {
             Cache::forget('codigo_' . $usuario_id);
+            $user = User::find($usuario_id);
+            $user->code_verified = true;
+            $user->save();
             return response()->json(['mensaje' => 'Código válido']);
         }
         return response()->json(['mensaje' => 'Código inválido'], 400);
+
     }
+    
+
+
 
     public function register(Request $request){
 
