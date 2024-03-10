@@ -1,10 +1,10 @@
 <?php
 
 namespace Database\Seeders;
-
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\DB;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,6 +14,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $users = [
+            [
+                'name' => 'Mark Antua Alonsson Smith',
+                'email' => env('ADM_EMAIL'),
+                'email_verified' => true,
+                'code_verified' => true,
+                'account_active' => true,
+                'role' => 'admin',
+                'email_verified_at' => now(),
+                'password' => Hash::make(env('ADM_PASSWORD')), 
+            ],
+        ];
+
+        DB::table('users')->insert($users);
     }
 }

@@ -37,14 +37,24 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logout', [UserController::class, 'logout']);
 
 
+    Route::middleware(['guest.auth'])->group(function () {
+        Route::get('/guestauth', function (Request $request) {
+            return response()->json(['msg' => 'bienvenido invitado']);
+        });
+    });
 
+    Route::middleware(['usuario.auth'])->group(function () {
+        Route::get('/userauth', function (Request $request) {
+            return response()->json(['msg' => 'bienvenido usuario']);
+        });
+    });
 
-
-
-
-
-
-
+    Route::middleware(['admin.auth'])->group(function () {
+        Route::get('/adminauth', function (Request $request) {
+            return response()->json(['msg' => 'bienvenido admin']);
+        });
+    });
+    
 });
 
 
