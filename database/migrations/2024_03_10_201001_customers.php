@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('phone');
             $table->text('email');
             $table->text('country');
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->nullable();
         });
     }
 

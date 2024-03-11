@@ -20,6 +20,8 @@ return new class extends Migration
             $table->date('orderDate');
             $table->date('requiredDate');
             $table->boolean('status');
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->nullable();
 
             $table->foreign('customer_id')->references('id')->on('customers');
         });

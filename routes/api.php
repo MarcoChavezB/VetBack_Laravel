@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SpecieController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VetAppointmentController;
@@ -69,4 +70,8 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
     ->name('Users.isCodeActive')
     ->where('userId', '[0-9]+');
 
+Route::get('/products/index', [ProductController:: class, 'index']);
+Route::post('/products/store', [ProductController:: class, 'store']);
+Route::delete('/products/delete/{id}', [ProductController:: class, 'destroy'])->where('id', '[0-9]+');
+Route::put('/products/update/{id}', [ProductController:: class, 'update'])->where('id', '[0-9]+');
 Route::post('/r', [UserController::class, 'r']);
