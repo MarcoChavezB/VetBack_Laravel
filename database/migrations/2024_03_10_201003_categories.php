@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
+            $table->enum('category', ['alimento', 'juguete', 'medicina', 'accesorio']);
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->nullable();
+            
             $table->text('description');
         });
     }
