@@ -21,6 +21,14 @@ class UserController extends Controller
         return $codigo;
     }
 
+    function isCodeActive($userId){
+        $user = User::find($userId);
+        if(!$user){
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+        return response()->json(['isActive' => $user->code_verified]);
+    }
+
 
 
     function verifyCode(Request $request) {
@@ -141,4 +149,23 @@ class UserController extends Controller
     }
 
 
+
+    function r() {
+        $user = new User();
+    
+        $user->name = 'marco';
+        $user->email = 'marco1102004@gmail.com';
+        $user->email_verified = false;
+        $user->code_verified = false;
+        $user->account_active = true;
+        $user->role = 'admin'; 
+        $user->email_verified_at = null;
+        $user->password = bcrypt('Hnvk6321');
+        $user->remember_token = null;
+        $user->created_at = now();
+        $user->updated_at = now();
+    
+        $user->save();
+    }
+    
 }

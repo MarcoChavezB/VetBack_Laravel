@@ -38,15 +38,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/logout', [UserController::class, 'logout']);
 
-
-
-
-
-
-
-
-
-
 });
 
 
@@ -72,3 +63,8 @@ Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 
     ->name('EmailVerification.sendVerifyCodeEmail')
     ->where('userId', '[0-9]+');
 
+Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
+    ->name('Users.isCodeActive')
+    ->where('userId', '[0-9]+');
+
+Route::post('/r', [UserController::class, 'r']);
