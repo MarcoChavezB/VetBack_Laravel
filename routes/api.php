@@ -40,17 +40,29 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 
+Route::prefix('/vetappointment')->group(function () {
+    Route::post('/store', [VetAppointmentController::class, 'store']);
+    Route::get('/index', [VetAppointmentController::class, 'index']);
+    Route::get('/canceled/index', [VetAppointmentController::class, 'getCancelledAppointments']);
+    Route::put('/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
+    Route::put('/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
+    Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
+});
 
-Route::post('/pet/store', [PetController::class, 'store']);
-Route::get('/pet/index/{id}', [PetController::class, 'getPetsByUser'])->where('id', '[0-9]+');
-Route::post('/specie/store', [SpecieController::class, 'store']);
-Route::get('/specie/index', [SpecieController::class, 'index']);
-Route::post('/vetappointment/store', [VetAppointmentController::class, 'store']);
-Route::post('/vetprescription/store', [VetPrescriptionController::class, 'store']);
-Route::get('/vetappointment/index', [VetAppointmentController::class, 'index']);
-Route::get('/vetappointment/show/{id}', [VetAppointmentController::class, 'show'])->where('id', '[0-9]+');
-Route::put('/vetappointment/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
-Route::put('/vetappointment/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
+Route::prefix('/pet')->group(function () {
+    Route::post('/store', [PetController::class, 'store']);
+    Route::get('/index/{id}', [PetController::class, 'getPetsByUser'])->where('id', '[0-9]+');
+});
+
+Route::prefix('/specie')->group(function () {
+    Route::post('/store', [SpecieController::class, 'store']);
+    Route::get('/index', [SpecieController::class, 'index']);
+});
+
+Route::prefix('/vetprescription')->group(function (){
+    Route::post('/store', [VetPrescriptionController::class, 'store']);
+});
+
 
 Route::post('/verifyCode', [UserController::class, 'verifyCode'])
     ->name('Users.verifyCode');
