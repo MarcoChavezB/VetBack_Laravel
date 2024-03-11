@@ -9,6 +9,16 @@ class Pet extends Model
 {
     use HasFactory;
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function vetAppointments()
+    {
+        return $this->hasMany(VetAppointment::class);
+    }
+
     protected $fillable = [
         'name',
         'gender',
