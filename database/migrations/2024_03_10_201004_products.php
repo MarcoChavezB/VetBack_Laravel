@@ -21,7 +21,10 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('price', 10, 2);
             $table->integer('stock');
-// customers - orders - categories - products - orderDetails
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->nullable();
+            $table->boolean('is_active')->default(true);
+
             $table->foreign('category_id')->references('id')->on('categories');
         });
     }

@@ -20,6 +20,8 @@ return new class extends Migration
 
             $table->decimal('unitPrice', 10, 2);
             $table->integer('quantity');
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->nullable();
 
             $table->foreign('order_id')->references('id')->on('orders');
             $table->foreign('product_id')->references('id')->on('products');

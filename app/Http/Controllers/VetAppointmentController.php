@@ -47,14 +47,19 @@ class VetAppointmentController extends Controller
         return response()->json(['vet_appointments' => $vetAppointments], 200);
     }
 
+    public function getCancelledAppointments(){
+        $vetAppointments = DB::table('vet_appointments')
+            ->join('users', 'vet_appointments.user_id', '=', 'users.id')
+            ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
+            ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
+            ->where('vet_appointments.status', 'Rechazada')
+            ->get();
 
-
-    public function show($id){
-        $vetAppointment = VetAppointment::find($id);
-        if (!$vetAppointment) {
-            return response()->json(['message' => 'Cita no encontrada'], 404);
+        if ($vetAppointments->isEmpty()) {
+            return response()->json(['message' => 'No hay citas rechazadas'], 404);
         }
-        return response()->json(['vet_appointment' => $vetAppointment], 200);
+
+        return response()->json(['vet_appointments' => $vetAppointments], 200);
     }
 
     public function markAsCompleted($id){
@@ -75,5 +80,15 @@ class VetAppointmentController extends Controller
         $vetAppointment->status = 'Rechazada';
         $vetAppointment->save();
         return response()->json(['success' => true, 'message' => 'Cita marcada como rechazada'], 200);
+    }
+
+    public function reOpen($id){
+        $vetAppointment = VetAppointment::find($id);
+        if (!$vetAppointment) {
+            return response()->json(['message' => 'Cita no encontrada'], 404);
+        }
+        $vetAppointment->status = 'Abierta';
+        $vetAppointment->save();
+        return response()->json(['success' => true, 'message' => 'Cita reabierta'], 200);
     }
 }
