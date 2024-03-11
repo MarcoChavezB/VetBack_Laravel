@@ -4,6 +4,8 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\SpecieController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VetAppointmentController;
+use App\Http\Controllers\VetPrescriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -54,13 +56,24 @@ Route::middleware(['auth:sanctum'])->group(function () {
             return response()->json(['msg' => 'bienvenido admin']);
         });
     });
+
+
+
     
 });
 
 
 Route::post('/pet/store', [PetController::class, 'store']);
+Route::get('/pet/index/{id}', [PetController::class, 'getPetsByUser'])->where('id', '[0-9]+');
 Route::post('/specie/store', [SpecieController::class, 'store']);
 Route::get('/specie/index', [SpecieController::class, 'index']);
+Route::post('/vetappointment/store', [VetAppointmentController::class, 'store']);
+Route::post('/vetprescription/store', [VetPrescriptionController::class, 'store']);
+Route::get('/vetappointment/index', [VetAppointmentController::class, 'index']);
+Route::get('/vetappointment/show/{id}', [VetAppointmentController::class, 'show'])->where('id', '[0-9]+');
+Route::put('/vetappointment/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
+Route::put('/vetappointment/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
+
 
 Route::post('/verifyCode', [UserController::class, 'verifyCode'])
     ->name('Users.verifyCode');
@@ -73,3 +86,8 @@ Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 
     ->name('EmailVerification.sendVerifyCodeEmail')
     ->where('userId', '[0-9]+');
 
+Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
+    ->name('Users.isCodeActive')
+    ->where('userId', '[0-9]+');
+
+Route::post('/r', [UserController::class, 'r']);
