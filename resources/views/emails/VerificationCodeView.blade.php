@@ -41,8 +41,8 @@
 <div class="container">
     <h2>Verificacion</h2>
     <p>Por favor ingrese este codigo en la aplicacion.</p>
-    <p>Este codigo es valido por 5 min</p>
-    <a>{{$code}}</a>
+    <p>Este codigo es valido por 5 min y es de uso unico</p>
+    <a ><h1>{{$code}}</h1></a>
 </div>
 </body>
 </html>
