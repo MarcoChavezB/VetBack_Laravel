@@ -19,6 +19,7 @@ return new class extends Migration
 
             $table->date('orderDate');
             $table->date('requiredDate');
+            $table->boolean('status');
 
             $table->foreign('customer_id')->references('id')->on('customers');
         });

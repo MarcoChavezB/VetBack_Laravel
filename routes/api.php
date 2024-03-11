@@ -52,6 +52,7 @@ Route::get('/vetappointment/show/{id}', [VetAppointmentController::class, 'show'
 Route::put('/vetappointment/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
 Route::put('/vetappointment/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
 
+
 Route::post('/verifyCode', [UserController::class, 'verifyCode'])
     ->name('Users.verifyCode');
 
@@ -62,6 +63,7 @@ Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
 Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
     ->name('EmailVerification.sendVerifyCodeEmail')
     ->where('userId', '[0-9]+');
+
 
 Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
     ->name('Users.isCodeActive')
