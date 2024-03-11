@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\VetAppointment;
 use App\Rules\UniqueDateTimeWithGap;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class VetAppointmentController extends Controller
@@ -32,12 +33,21 @@ class VetAppointmentController extends Controller
     }
 
     public function index(){
-        $vetAppointments = VetAppointment::all();
+        $vetAppointments = DB::table('vet_appointments')
+            ->join('users', 'vet_appointments.user_id', '=', 'users.id')
+            ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
+            ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
+            ->where('vet_appointments.status', 'Abierta')
+            ->get();
+
         if ($vetAppointments->isEmpty()) {
             return response()->json(['message' => 'No hay citas registradas'], 404);
         }
+
         return response()->json(['vet_appointments' => $vetAppointments], 200);
     }
+
+
 
     public function show($id){
         $vetAppointment = VetAppointment::find($id);
