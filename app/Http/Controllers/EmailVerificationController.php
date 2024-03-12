@@ -42,6 +42,7 @@ class EmailVerificationController extends Controller
         $userToken->save();*/
 
         $user->email_verified = true;
+        $user->account_active = true;
         $user->email_verified_at = now();
         $user->save();
 
