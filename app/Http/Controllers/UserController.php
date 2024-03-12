@@ -18,7 +18,11 @@ class UserController extends Controller
 {
     function getCode($userId){
         $codigo = Str::random(6);
+<<<<<<< HEAD
         Cache::put('codigo_' . $userId, $codigo, Carbon::now()->addMinutes(2));
+=======
+        Cache::put('codigo_' . $userId, $codigo, Carbon::now()->addMinutes(1));
+>>>>>>> 8a7e75e287132a04b5b48fb1f9ff5219e25a8842
         return $codigo;
     }
 
@@ -29,8 +33,6 @@ class UserController extends Controller
         }
         return response()->json(['isActive' => $user->code_verified]);
     }
-
-
 
     function verifyCode(Request $request) {
         $validator = Validator::make($request->all(), [
@@ -163,25 +165,4 @@ class UserController extends Controller
         
         return response()->json(['status' => true]);
     }
-
-
-
-    function r() {
-        $user = new User();
-    
-        $user->name = 'marco';
-        $user->email = 'marco1102004@gmail.com';
-        $user->email_verified = false;
-        $user->code_verified = false;
-        $user->account_active = true;
-        $user->role = 'admin'; 
-        $user->email_verified_at = null;
-        $user->password = bcrypt('Hnvk6321');
-        $user->remember_token = null;
-        $user->created_at = now();
-        $user->updated_at = now();
-    
-        $user->save();
-    }
-    
 }
