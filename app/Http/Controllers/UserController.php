@@ -154,11 +154,10 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['msg' => 'Usuario no encontrado'], 404);
         };
-
-        $user->code_verified = false;
-        
-        $user->currentAccessToken()->delete();
-        
+        $userFind = User::find($user->id);
+        $userFind->code_verified = false;
+        $userFind->save();
+        $user->currentAccessToken()->delete();        
         return response()->json(['status' => true]);
     }
 }
