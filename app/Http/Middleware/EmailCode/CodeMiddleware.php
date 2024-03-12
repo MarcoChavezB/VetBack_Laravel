@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Middleware\role;
-use Models\User;
-use Closure;
-use Illuminate\Http\Request;
+namespace App\Http\Middleware\EmailCode;
 use Illuminate\Support\Facades\Auth;
 
-class GuestMiddleware
+use Closure;
+use Illuminate\Http\Request;
+
+class CodeMiddleware
 {
     /**
      * Handle an incoming request.
@@ -23,13 +23,9 @@ class GuestMiddleware
         if (!$user) {
             return response()->json(['msg' => 'Usuario no encontrado'], 404);
         };
-
-        if ($user->role === 'admin' || $user->role === 'user' ){
-            return $next($request);
-        }
         
-        if ($user->role !== 'guest' ){
-            return response()->json(['msg' => 'No tienes los permisos necesarios'], 403);
+        if (!$user->code_verified){
+            return response()->json(['msg' => 'Aun no verificas tu cuenta 2FA'], 403);
         }
 
         return $next($request);

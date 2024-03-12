@@ -10,13 +10,14 @@ class ProductController extends Controller
 {
     function index (){
         return response()->json([
-            "products" => Product::all()->where('is_active', true)
+            "products" => Product::where('is_active', 1)->get()->values()
         ]);
     }
+    
 
     function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'name' => 'required | min:3 | max:100',
+            'name' => 'required | min:3 | max:100 | unique:products,name',
             'category_id' => 'required | integer | exists:categories,id',
             'description' => 'required | min:3 | max:100',
             'price' => 'required | numeric | min:0', 
@@ -25,6 +26,7 @@ class ProductController extends Controller
             'name.required' => 'El nombre es requerido',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
             'name.max' => 'El nombre debe tener como máximo 100 caracteres',
+            'name.unique' => 'El producto ya existe',
 
             'category_id.required' => 'La categoría es requerida',
             'category_id.integer' => 'La categoría debe ser un número entero',
@@ -67,21 +69,25 @@ class ProductController extends Controller
 
     function destroy($id){
         $producto = Product::find($id);
+    
         if(!$producto){
             return response()->json([
                 "error" => "Producto no encontrado"
             ], 404);
         }
-
+    
         $producto->is_active = false;
         $producto->save();
-
+    
+        $productosActivos = Product::where('is_active', 1)->get();
+    
         return response()->json([
-            "message" => "Producto eliminado con éxito"
+            "message" => "Producto eliminado con éxito",
+            "products" => $productosActivos
         ]);
     }
-
-    function update(Request $request){
+    
+    function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
             'name' => 'min:3 | max:100',
             'category_id' => 'integer | exists:categories,id',
@@ -113,7 +119,7 @@ class ProductController extends Controller
             ], 400);
         }
 
-        $producto = Product::find($request->id);
+        $producto = Product::find($id);
         if(!$producto){
             return response()->json([
                 "error" => "Producto no encontrado"
@@ -130,6 +136,20 @@ class ProductController extends Controller
         return response()->json([
             "message" => "Producto actualizado con éxito",
             "producto" => $producto
+        ]);
+    }
+
+    function show($id){
+        $product = Product::find($id);
+
+        if(!$product){
+            return response()->json([
+                "error" => "Producto no encontrado"
+            ], 404);
+        }
+
+        return response()->json([
+            "products" => $product
         ]);
     }
 }

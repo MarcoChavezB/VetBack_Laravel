@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Middleware;
-use Models\User;
+namespace App\Http\Middleware\role;
+
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class UserMiddleware
+class UsuaMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,17 +17,19 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-
         $user = Auth::user();
 
         if (!$user) {
             return response()->json(['msg' => 'Usuario no encontrado'], 404);
         };
+
+        if ($user->role === 'admin'){
+            return $next($request);
+        }
         
-        if ($user->role !== 'user' ){
+        if ($user->role !== 'user'){
             return response()->json(['msg' => 'No tienes los permisos necesarios'], 403);
         }
-
         return $next($request);
     }
 }
