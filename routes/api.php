@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\ProductController;
@@ -70,8 +71,17 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
     ->name('Users.isCodeActive')
     ->where('userId', '[0-9]+');
 
-Route::get('/products/index', [ProductController:: class, 'index']);
-Route::post('/products/store', [ProductController:: class, 'store']);
-Route::delete('/products/delete/{id}', [ProductController:: class, 'destroy'])->where('id', '[0-9]+');
-Route::put('/products/update/{id}', [ProductController:: class, 'update'])->where('id', '[0-9]+');
+
+Route::prefix('/product')->group(function (){
+    Route::get('/index', [ProductController::class, 'index']);
+    Route::post('/store', [ProductController::class, 'store']);
+    Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
+    Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
+    Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
+});
+
+Route::prefix('/category')->group(function (){
+    Route::get('/index', [CategoryController::class, 'index']);
+});
+
 Route::post('/r', [UserController::class, 'r']);
