@@ -18,11 +18,7 @@ class UserController extends Controller
 {
     function getCode($userId){
         $codigo = Str::random(6);
-<<<<<<< HEAD
-        Cache::put('codigo_' . $userId, $codigo, Carbon::now()->addMinutes(2));
-=======
         Cache::put('codigo_' . $userId, $codigo, Carbon::now()->addMinutes(1));
->>>>>>> 8a7e75e287132a04b5b48fb1f9ff5219e25a8842
         return $codigo;
     }
 
