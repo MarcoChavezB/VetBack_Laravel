@@ -44,7 +44,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/vetappointment')->group(function () {
     Route::post('/store', [VetAppointmentController::class, 'store']);
     Route::get('/index', [VetAppointmentController::class, 'index']);
-    Route::get('/canceled/index', [VetAppointmentController::class, 'getCancelledAppointments']);
+    Route::get('/canceled/index', [VetAppointmentController::class, 'cancelledIndex']);
+    Route::get('/completed/index', [VetAppointmentController::class, 'completedIndex']);
     Route::put('/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
     Route::put('/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
     Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
