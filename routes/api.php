@@ -78,6 +78,17 @@ Route::post('/r', [UserController::class, 'r']);
 
 ///////////////////////////////////////////////////////////
 
+Route::middleware(['email.verified'])->group(function () { // verifica el email verificado
+
+    Route::get('/emailverified', function () {
+        return response()->json([
+            'status' => true
+        ]);
+    });
+    
+});
+
+
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
     Route::get('/authenticatetoken', function () {
@@ -88,14 +99,6 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
     Route::get('/logout', [UserController::class, 'logout']);
 
-    Route::middleware(['email.verified'])->group(function () { // verifica el email verificado
-
-        Route::get('/emailverified', function () {
-            return response()->json([
-                'status' => true
-            ]);
-        });
-            
         Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
                 
             Route::get('/activeaccount', function () {
@@ -131,7 +134,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         return response()->json(['msg' => 'bienvenido admin']);
                     });
                 });
-            
+                
                     
                 Route::post('/r', [UserController::class, 'r']);
                 Route::get('/products/index', [ProductController:: class, 'index']);
@@ -165,8 +168,5 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
             });
 
         });
-
-    });
-
 
 });

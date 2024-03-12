@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use App\Mail\EmailVerification;
 use App\Models\User;
@@ -17,7 +18,7 @@ class UserController extends Controller
 {
     function getCode($userId){
         $codigo = Str::random(6);
-        Cache::put('codigo_' . $userId, $codigo, Carbon::now()->addMinutes(100));
+        Cache::put('codigo_' . $userId, $codigo, Carbon::now()->addMinutes(2));
         return $codigo;
     }
 
@@ -150,7 +151,16 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return response()->json(['msg' => 'Usuario no encontrado'], 404);
+        };
+
+        $user->code_verified = false;
+        
         $request->user()->currentAccessToken()->delete();
+        
         return response()->json(['status' => true]);
     }
 
