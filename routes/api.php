@@ -63,7 +63,6 @@ Route::prefix('/category')->group(function (){
     Route::get('/index', [CategoryController::class, 'index']);
 });
 
-Route::post('/r', [UserController::class, 'r']);
 
 ///////////////////////////////////////////////////////////
 

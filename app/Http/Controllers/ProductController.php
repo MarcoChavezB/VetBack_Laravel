@@ -18,10 +18,10 @@ class ProductController extends Controller
     function store(Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required | min:3 | max:100 | unique:products,name',
-            'category_id' => 'required | integer | exists:categories,id',
             'description' => 'required | min:3 | max:100',
-            'price' => 'required | numeric | min:0', 
-            'stock' => 'required | integer | min:1'
+            'category_id' => 'required | integer | exists:categories,id',
+            'stock' => 'required | integer | min:1',
+            'price' => 'required | numeric | min:0'
         ], [
             'name.required' => 'El nombre es requerido',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
