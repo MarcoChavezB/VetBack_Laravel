@@ -18,9 +18,11 @@ class UserController extends Controller
 {
     function getCode($userId){
         $codigo = Str::random(6);
-        Cache::put('codigo_' . $userId, $codigo, Carbon::now()->addMinutes(1));
+        $hashedCode = hash('sha256', $codigo);
+        Cache::put('codigo_' . $userId, $hashedCode, Carbon::now()->addMinutes(1));
         return $codigo;
     }
+    
 
     function isCodeActive($userId){
         $user = User::find($userId);
@@ -29,7 +31,6 @@ class UserController extends Controller
         }
         return response()->json(['isActive' => $user->code_verified]);
     }
-
     function verifyCode(Request $request) {
         $validator = Validator::make($request->all(), [
             'codigo' => 'required|min:6|max:6',
@@ -59,22 +60,22 @@ class UserController extends Controller
         }
     
         if (!Cache::has('codigo_' . $usuario_id)) {
-            return response()->json(['mensaje' => 'Codigo no valido'], 400);
+            return response()->json(['mensaje' => 'Código no válido'], 400);
         }
     
-        $codigo_guardado = Cache::get('codigo_' . $usuario_id);
+        $hashedCode = Cache::get('codigo_' . $usuario_id);
     
-        if ($codigo_guardado && $codigo_guardado == $codigo_ingresado) {
+        if (hash_equals($hashedCode, hash('sha256', $codigo_ingresado))) {
             Cache::forget('codigo_' . $usuario_id);
             $user = User::find($usuario_id);
             $user->code_verified = true;
             $user->save();
             return response()->json(['mensaje' => 'Código válido']);
         }
-        return response()->json(['mensaje' => 'Código inválido'], 400);
-
-    }
     
+        return response()->json(['mensaje' => 'Código inválido'], 400);
+    }
+        
 
 
 
