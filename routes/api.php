@@ -49,7 +49,6 @@ Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 
 Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
     ->name('Users.isCodeActive')
     ->where('userId', '[0-9]+');
-///////////////////////////////////////////////////////////
 
 
 Route::prefix('/product')->group(function (){
@@ -65,6 +64,9 @@ Route::prefix('/category')->group(function (){
 });
 
 Route::post('/r', [UserController::class, 'r']);
+
+///////////////////////////////////////////////////////////
+
     // MIDDLEWARES
 
     // 'email.verified' ----- rutas para verificar que el email sea valido, este ira a raiz de todas las rutas
@@ -83,7 +85,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
             'status' => true
         ]);
     });
-    
+
     Route::get('/logout', [UserController::class, 'logout']);
 
     Route::middleware(['email.verified'])->group(function () { // verifica el email verificado

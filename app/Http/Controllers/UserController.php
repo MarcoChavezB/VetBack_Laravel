@@ -132,7 +132,7 @@ class UserController extends Controller
             ], 401);
         }
 
-        if($user->email_verified = false){
+        if($user->email_verified == false){
             return response()->json([
                 'msg' => 'Correo no verificado'
             ], 403);
