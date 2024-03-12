@@ -147,7 +147,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
         $user = Auth::user();
         
@@ -157,7 +157,7 @@ class UserController extends Controller
 
         $user->code_verified = false;
         
-        $request->user()->currentAccessToken()->delete();
+        $user->currentAccessToken()->delete();
         
         return response()->json(['status' => true]);
     }
