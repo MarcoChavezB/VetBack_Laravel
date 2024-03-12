@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     function index (){
+        $producto = Product::with(['category' => function ($query){
+            $query->select('id', 'category');
+        }])->where('is_active', 1)->get();
+        
         return response()->json([
-            "products" => Product::where('is_active', 1)->get()->values()
+            "products" => $producto
         ]);
     }
     

@@ -41,6 +41,11 @@ Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
     ->name('Users.getCode')
     ->where('userId', '[0-9]+');
 
+Route::get('/users/index', [UserController::class, 'index']);
+Route::post('/users/desactivate/{id}', [UserController::class, 'desactivate'])
+->where('id', '[0-9]+')
+->name('Users.desactivate');
+
 Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
     ->name('EmailVerification.sendVerifyCodeEmail')
     ->where('userId', '[0-9]+');
