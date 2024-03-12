@@ -47,7 +47,22 @@ class VetAppointmentController extends Controller
         return response()->json(['vet_appointments' => $vetAppointments], 200);
     }
 
-    public function getCancelledAppointments(){
+    public function completedIndex(){
+        $vetAppointments = DB::table('vet_appointments')
+            ->join('users', 'vet_appointments.user_id', '=', 'users.id')
+            ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
+            ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
+            ->where('vet_appointments.status', 'Consultada')
+            ->get();
+
+        if ($vetAppointments->isEmpty()) {
+            return response()->json(['message' => 'No hay citas registradas'], 404);
+        }
+
+        return response()->json(['vet_appointments' => $vetAppointments], 200);
+    }
+
+    public function cancelledIndex(){
         $vetAppointments = DB::table('vet_appointments')
             ->join('users', 'vet_appointments.user_id', '=', 'users.id')
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')

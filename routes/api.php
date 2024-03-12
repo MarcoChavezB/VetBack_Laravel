@@ -66,14 +66,14 @@ Route::prefix('/category')->group(function (){
 
 ///////////////////////////////////////////////////////////
 
-    // MIDDLEWARES
+// MIDDLEWARES
 
-    // 'email.verified' ----- rutas para verificar que el email sea valido, este ira a raiz de todas las rutas
-    // 'code.verified' ----- rutas para verificar que el codigo sea valido
-    // 'activeaccount.verified' ----- rutas para verificar que la cuenta sea activa, tambien ira a raiz de todas las rutas
-    // 'admin.auth' ----- rutas para solo administrador
-    // 'guest.auth' ----- rutas para solo invitado
-    // 'usuario.auth' ----- rutas para solo usuarios
+// 'email.verified' ----- rutas para verificar que el email sea valido, este ira a raiz de todas las rutas
+// 'code.verified' ----- rutas para verificar que el codigo sea valido
+// 'activeaccount.verified' ----- rutas para verificar que la cuenta sea activa, tambien ira a raiz de todas las rutas
+// 'admin.auth' ----- rutas para solo administrador
+// 'guest.auth' ----- rutas para solo invitado
+// 'usuario.auth' ----- rutas para solo usuarios
 
 ///////////////////////////////////////////////////////////
 
@@ -94,9 +94,9 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                 'status' => true
             ]);
         });
-            
+
         Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
-                
+
             Route::get('/activeaccount', function () {
                 return response()->json([
                     'status' => true
@@ -104,59 +104,60 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
             });
 
             Route::middleware(['code.verified'])->group(function () { // codigo verificado
-                    
+
                 Route::get('/codeverified', function () {
                     return response()->json([
                         'status' => true
                     ]);
                 });
 
-            
+
                 Route::middleware(['guest.auth'])->group(function () {
                     Route::get('/guestauth', function (Request $request) {
                         return response()->json(['msg' => 'bienvenido invitado']);
                     });
                 });
-            
-            
+
+
                 Route::middleware(['usuario.auth'])->group(function () {
                     Route::get('/userauth', function (Request $request) {
                         return response()->json(['msg' => 'bienvenido usuario']);
                     });
                 });
-            
+
                 Route::middleware(['admin.auth'])->group(function () {
                     Route::get('/adminauth', function (Request $request) {
                         return response()->json(['msg' => 'bienvenido admin']);
                     });
                 });
-            
-                    
+
+
                 Route::post('/r', [UserController::class, 'r']);
                 Route::get('/products/index', [ProductController:: class, 'index']);
                 Route::post('/products/store', [ProductController:: class, 'store']);
                 Route::delete('/products/delete/{id}', [ProductController:: class, 'destroy'])->where('id', '[0-9]+');
                 Route::put('/products/update/{id}', [ProductController:: class, 'update'])->where('id', '[0-9]+');
-            
+
                 Route::prefix('/vetappointment')->group(function () {
                     Route::post('/store', [VetAppointmentController::class, 'store']);
                     Route::get('/index', [VetAppointmentController::class, 'index']);
-                    Route::get('/canceled/index', [VetAppointmentController::class, 'getCancelledAppointments']);
+                    Route::get('/canceled/index', [VetAppointmentController::class, 'cancelledIndex']);
+                    Route::get('/completed/index', [VetAppointmentController::class, 'completedIndex']);
                     Route::put('/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
                     Route::put('/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
                     Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
                 });
-            
+
                 Route::prefix('/pet')->group(function () {
                     Route::post('/store', [PetController::class, 'store']);
                     Route::get('/index/{id}', [PetController::class, 'getPetsByUser'])->where('id', '[0-9]+');
                 });
-            
+
                 Route::prefix('/specie')->group(function () {
                     Route::post('/store', [SpecieController::class, 'store']);
                     Route::get('/index', [SpecieController::class, 'index']);
                 });
-            
+
                 Route::prefix('/vetprescription')->group(function (){
                     Route::post('/store', [VetPrescriptionController::class, 'store']);
                 });
