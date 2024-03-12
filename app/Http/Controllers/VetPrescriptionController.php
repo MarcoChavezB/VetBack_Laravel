@@ -11,7 +11,7 @@ class VetPrescriptionController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'diagnosis' => 'required|string|max:255',
+            'diagnosis' => 'required|string|max:100',
             'observations' => 'required|string|max:255',
             'indications' => 'required|string|max:255',
             'vet_id' => 'required|exists:users,id',
