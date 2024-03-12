@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'Mark Antua Alonsson Smith',
+                'name' => env('ADM_NAME'),
                 'email' => env('ADM_EMAIL'),
                 'email_verified' => true,
                 'code_verified' => true,
