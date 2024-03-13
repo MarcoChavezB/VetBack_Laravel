@@ -107,6 +107,16 @@ class VetAppointmentController extends Controller
         return response()->json(['success' => true, 'message' => 'Cita reabierta'], 200);
     }
 
+    public function getVetAppointmentsByUser($id){
+        $vetAppointments = DB::table('vet_appointments')
+            ->join('users', 'vet_appointments.user_id', '=', 'users.id')
+            ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
+            ->select('vet_appointments.*',  'pets.name as pet')
+            ->where('vet_appointments.user_id', $id)
+            ->get();
+        return response()->json(['vet_appointments' => $vetAppointments], 200);
+    }
+
     function totalApointments(){
         $totalApointments = VetAppointment::all()->count();
         return response()->json(['total' => $totalApointments], 200);
@@ -120,6 +130,4 @@ class VetAppointmentController extends Controller
             ->get();
         return response()->json(['info' => $infoAppointments], 200);
     }
-    
-    
 }

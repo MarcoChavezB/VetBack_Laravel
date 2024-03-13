@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pet;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PetController extends Controller
@@ -37,6 +39,25 @@ class PetController extends Controller
             return response()->json(['message' => 'No hay mascotas registradas'], 404);
         }
         return response()->json(['pets' => $pets], 200);
+    }
+
+    public function userPets($id){
+
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+        $pets = Pet::where('user_id', $id)->get();
+        if ($pets->isEmpty()) {
+            return response()->json(['message' => 'No hay mascotas registradas'], 404);
+        }
+        $pets = DB::table('pets')
+            ->join('species', 'pets.specie_id', '=', 'species.id')
+            ->select('pets.*', 'species.specie_name as specie')
+            ->where('pets.user_id', $id)
+            ->get();
+        return response()->json(['pets' => $pets], 200);
+
     }
 
 }
