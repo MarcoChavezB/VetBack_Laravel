@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('account_active')->default(false);
             $table->enum('role', ['admin', 'user', 'guest'])->default('guest');
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('code')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

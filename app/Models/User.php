@@ -34,7 +34,8 @@ class User extends Authenticatable
         'account_active',
         'code_verified',
         'email_verified',
-        'role'
+        'role',
+        'code'
     ];
 
     /**
@@ -48,7 +49,8 @@ class User extends Authenticatable
         // 'account_active',
         'code_verified',
         'email_verified',
-        'role'
+        'role',
+        'code'
     ];
 
     /**
