@@ -112,11 +112,14 @@ class VetAppointmentController extends Controller
         return response()->json(['total' => $totalApointments], 200);
     }
 
-    function infoApointments(){
-        $infoApointments = VetAppointment::with(['user_id' => function($query){
-            $query->select('id', 'name');            
-        }])->get();
-
-        return response()->json(['info' => $infoApointments], 200);
+    function infoAppointments(){
+        $infoAppointments = DB::table('vet_appointments')
+            ->join('users', 'vet_appointments.user_id', '=', 'users.id')
+            ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
+            ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
+            ->get();
+        return response()->json(['info' => $infoAppointments], 200);
     }
+    
+    
 }
