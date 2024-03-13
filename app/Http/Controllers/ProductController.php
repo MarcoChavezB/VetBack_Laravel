@@ -17,7 +17,17 @@ class ProductController extends Controller
             "products" => $producto
         ]);
     }
-    
+
+    function indexDisabled (){
+        $producto = Product::with(['category' => function ($query){
+            $query->select('id', 'category');
+        }])->where('is_active', 0)->get();
+        
+        return response()->json([
+            "products" => $producto
+        ]);
+    }
+
 
     function store(Request $request){
         $validator = Validator::make($request->all(), [
@@ -25,7 +35,7 @@ class ProductController extends Controller
             'description' => 'required | min:3 | max:100',
             'category_id' => 'required | integer | exists:categories,id',
             'stock' => 'required | integer | min:1',
-            'price' => 'required | numeric | min:0'
+            'price' => 'required | numeric | min:1'
         ], [
             'name.required' => 'El nombre es requerido',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
@@ -90,13 +100,30 @@ class ProductController extends Controller
             "products" => $productosActivos
         ]);
     }
+
+    function activateProd($id){
+        $producto = Product::find($id);
+    
+        if(!$producto){
+            return response()->json([
+                "error" => "Producto no encontrado"
+            ], 404);
+        }
+    
+        $producto->is_active = true;
+        $producto->save();
+    
+        return response()->json([
+            "message" => "Producto activado con exito",
+        ]);
+    }
     
     function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
             'name' => 'min:3 | max:100',
             'category_id' => 'integer | exists:categories,id',
             'description' => 'min:3 | max:100',
-            'price' => 'numeric | min:0', 
+            'price' => 'numeric | min:1', 
             'stock' => 'integer | min:1'
         ], [
 
@@ -115,14 +142,13 @@ class ProductController extends Controller
             'stock.integer' => 'El stock debe ser un número entero',
             'stock.min' => 'El stock debe ser mayor a 0'
         ]);
-
         $validatorErrors = $validator->errors()->toArray();
         if($validator->fails()){
             return response()->json([
                 'error' => $validatorErrors
             ], 400);
         }
-
+    
         $producto = Product::find($id);
         if(!$producto){
             return response()->json([
@@ -130,13 +156,23 @@ class ProductController extends Controller
             ], 404);
         }
         
+        $originalData = $producto->toArray(); // Almacena los datos originales antes de la actualización
+    
         $producto->category_id = $request->category_id ?? $producto->category_id;
         $producto->name = $request->name ?? $producto->name;
         $producto->description = $request->description ?? $producto->description;
         $producto->price = $request->price ?? $producto->price;
         $producto->stock = $request->stock ?? $producto->stock;
         $producto->save();
-
+    
+        $updatedData = $producto->toArray(); // Almacena los datos actualizados después de la actualización
+    
+        if($originalData === $updatedData){
+            return response()->json([
+                "message" => "No se realizaron cambios"
+            ], 400);
+        }
+    
         return response()->json([
             "message" => "Producto actualizado con éxito",
             "producto" => $producto
