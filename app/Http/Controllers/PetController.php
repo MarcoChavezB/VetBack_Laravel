@@ -33,14 +33,6 @@ class PetController extends Controller
         return response()->json(["success" => true, "message"=>"Mascota registrada correctamente"], 201);
     }
 
-    public function getPetsByUser($id){
-        $pets = Pet::where('user_id', $id)->get();
-        if ($pets->isEmpty()) {
-            return response()->json(['message' => 'No hay mascotas registradas'], 404);
-        }
-        return response()->json(['pets' => $pets], 200);
-    }
-
     public function userPets($id){
 
         $user = User::find($id);

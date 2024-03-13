@@ -164,10 +164,10 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                 Route::prefix('/pet')->group(function () {
                     Route::post('/store', [PetController::class, 'store']);
-                    Route::get('/index/{id}', [PetController::class, 'getPetsByUser'])->where('id', '[0-9]+');
-                    Route::get('/userpets/{id}', [PetController::class, 'userPets']);
-                    Route::get('/show/{id}', [PetController::class, 'show']);
-                    Route::put('/update/{id}', [PetController::class, 'update']);
+                    Route::get('/index/{id}', [PetController::class, 'userPets'])->where('id', '[0-9]+');
+                    Route::get('/userpets/{id}', [PetController::class, 'userPets'])->where('id', '[0-9]+');
+                    Route::get('/show/{id}', [PetController::class, 'show'])->where('id', '[0-9]+');
+                    Route::put('/update/{id}', [PetController::class, 'update'])->where('id', '[0-9]+');
                 });
 
                 Route::prefix('/specie')->group(function () {
