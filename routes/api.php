@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::any('/authenticate', function (Request $request) {
     return response()->json(['error' => 'Token inválido'], 401);
-
 })->name('error');
 
 
@@ -48,7 +47,6 @@ Route::post('/users/desactivate/{id}', [UserController::class, 'desactivate'])
 ->name('Users.desactivate');
 
 Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
-    ->name('EmailVerification.sendVerifyCodeEmail')
     ->where('userId', '[0-9]+');
 
 
