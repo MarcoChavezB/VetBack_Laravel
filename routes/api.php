@@ -76,7 +76,6 @@ Route::prefix('/category')->group(function (){
 
 // MIDDLEWARES
 
-// 'email.verified' ----- rutas para verificar que el email sea valido, este ira a raiz de todas las rutas
 // 'code.verified' ----- rutas para verificar que el codigo sea valido
 // 'activeaccount.verified' ----- rutas para verificar que la cuenta sea activa, tambien ira a raiz de todas las rutas
 // 'admin.auth' ----- rutas para solo administrador
@@ -84,18 +83,6 @@ Route::prefix('/category')->group(function (){
 // 'usuario.auth' ----- rutas para solo usuarios
 
 ///////////////////////////////////////////////////////////
-
-Route::middleware(['email.verified'])->group(function () { // verifica el email verificado
-
-    Route::get('/emailverified', function () {
-        return response()->json([
-            'status' => true
-        ]);
-    });
-
-});
-
-
 
 
 
