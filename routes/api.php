@@ -147,11 +147,13 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::put('/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
                     Route::put('/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
                     Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
+                    Route::get('/user/{id}', [VetAppointmentController::class, 'getVetAppointmentsByUser'])->where('id', '[0-9]+');
                 });
 
                 Route::prefix('/pet')->group(function () {
                     Route::post('/store', [PetController::class, 'store']);
                     Route::get('/index/{id}', [PetController::class, 'getPetsByUser'])->where('id', '[0-9]+');
+                    Route::get('/userpets/{id}', [PetController::class, 'userPets']);
                 });
 
                 Route::prefix('/specie')->group(function () {
@@ -161,6 +163,8 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                 Route::prefix('/vetprescription')->group(function (){
                     Route::post('/store', [VetPrescriptionController::class, 'store']);
+                    Route::get('/index', [VetPrescriptionController::class, 'index']);
+                    Route::get('/user/{id}', [VetPrescriptionController::class, 'getUserPrescriptions'])->where('id', '[0-9]+');
                 });
 
             });
