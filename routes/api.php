@@ -96,14 +96,7 @@ Route::middleware(['email.verified'])->group(function () { // verifica el email 
 });
 
 
-Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
 
-    Route::get('/activeaccount', function () {
-        return response()->json([
-            'status' => true
-        ]);
-    });
-});
 
 
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
@@ -115,6 +108,15 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
     });
 
     Route::get('/logout', [UserController::class, 'logout']);
+
+
+    Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
+
+        Route::get('/activeaccount', function () {
+            return response()->json([
+                'status' => true
+            ]);
+        });
 
         Route::middleware(['code.verified'])->group(function () { // codigo verificado
         
@@ -160,8 +162,8 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::put('/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
                     Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
                     Route::get('/totalApointments', [VetAppointmentController::class, 'totalApointments']);
-                    Route::get('/info/Appointments', [VetAppointmentController::class, 'infoAppointments']);
                 });
+                Route::get('/info/Appointments', [VetAppointmentController::class, 'infoAppointments']);
 
                 Route::prefix('/pet')->group(function () {
                     Route::post('/store', [PetController::class, 'store']);
@@ -178,5 +180,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                 });
 
             });
-});
 
+        });
+
+});

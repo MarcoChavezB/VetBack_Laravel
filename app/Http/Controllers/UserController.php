@@ -177,6 +177,7 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['msg' => 'Usuario no encontrado'], 404);
         };
+
         $userFind = User::find($user->id);
         $userFind->code_verified = false;
         $userFind->save();
