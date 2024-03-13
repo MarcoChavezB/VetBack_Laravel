@@ -156,4 +156,18 @@ class ProductController extends Controller
             "products" => $product
         ]);
     }
+
+    function totalProducts(){
+        $totalProducts = Product::where('is_active', 1)->count();
+        return response()->json([
+            "total" => $totalProducts
+        ]);
+    }
+
+    function stockBajo(){
+        $productos = Product::where('stock', '<', 5)->get();
+        return response()->json([
+            "products" => $productos
+        ]);
+    }
 }

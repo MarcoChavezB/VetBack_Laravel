@@ -183,4 +183,11 @@ class UserController extends Controller
         $user->currentAccessToken()->delete();        
         return response()->json(['status' => true]);
     }
+
+    function totalUsers(){
+        $users = User::all();
+        return response()->json([
+            "total" => $users->count()
+        ]);
+    }
 }

@@ -106,4 +106,17 @@ class VetAppointmentController extends Controller
         $vetAppointment->save();
         return response()->json(['success' => true, 'message' => 'Cita reabierta'], 200);
     }
+
+    function totalApointments(){
+        $totalApointments = VetAppointment::all()->count();
+        return response()->json(['total' => $totalApointments], 200);
+    }
+
+    function infoApointments(){
+        $infoApointments = VetAppointment::with(['user_id' => function($query){
+            $query->select('id', 'name');            
+        }])->get();
+
+        return response()->json(['info' => $infoApointments], 200);
+    }
 }
