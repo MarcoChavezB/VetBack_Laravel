@@ -14,8 +14,7 @@ use App\Mail\EmailCodeVerification as MailEmailCodeVerification;
 class EmailVerificationController extends Controller
 {
     private $userController;
-    public function __construct()
-    {
+    public function __construct(){
         $this->userController = new UserController();
     }
 

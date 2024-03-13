@@ -13,9 +13,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\EmailVerificationController;
 
 class UserController extends Controller
 {
+    private $emailController;
+    public function __construct()
+    {
+        $this->emailController = new EmailVerificationController();
+    }
 
     function index()
     {
@@ -50,6 +56,12 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
+
+        if($user->code_verified == 0){
+            $this->emailController->sendVerifyCodeEmail($userId);
+            return response()->json(['mensaje' => 'Código enviado']);
+        }
+
         return response()->json(['isActive' => $user->code_verified]);
     }
     
