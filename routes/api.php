@@ -136,8 +136,10 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                 Route::post('/r', [UserController::class, 'r']);
                 Route::get('/products/index', [ProductController:: class, 'index']);
+                Route::get('/products/index/disabled', [ProductController:: class, 'indexDisabled']);
                 Route::post('/products/store', [ProductController:: class, 'store']);
                 Route::delete('/products/delete/{id}', [ProductController:: class, 'destroy'])->where('id', '[0-9]+');
+                Route::post('/products/activate/{id}', [ProductController:: class, 'activateProd'])->where('id', '[0-9]+');
                 Route::put('/products/update/{id}', [ProductController:: class, 'update'])->where('id', '[0-9]+');
 
                 Route::prefix('/vetappointment')->group(function () {
