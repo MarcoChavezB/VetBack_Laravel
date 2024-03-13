@@ -41,6 +41,12 @@ Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
     ->name('Users.getCode')
     ->where('userId', '[0-9]+');
 
+Route::get('/users/index', [UserController::class, 'index']);
+Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);
+Route::post('/users/desactivate/{id}', [UserController::class, 'desactivate'])
+->where('id', '[0-9]+')
+->name('Users.desactivate');
+
 Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
     ->name('EmailVerification.sendVerifyCodeEmail')
     ->where('userId', '[0-9]+');
@@ -57,6 +63,8 @@ Route::prefix('/product')->group(function (){
     Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
     Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
     Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
+    Route::get('/totalProducts', [ProductController::class, 'totalProducts']);
+    Route::get('/stockBajo', [ProductController::class, 'stockBajo']);
 });
 
 Route::prefix('/category')->group(function (){
@@ -151,6 +159,8 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::put('/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
                     Route::put('/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
                     Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
+                    Route::get('/totalApointments', [VetAppointmentController::class, 'totalApointments']);
+                    Route::get('/info/Appointments', [VetAppointmentController::class, 'infoAppointments']);
                 });
 
                 Route::prefix('/pet')->group(function () {
@@ -169,3 +179,4 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
             });
 });
+

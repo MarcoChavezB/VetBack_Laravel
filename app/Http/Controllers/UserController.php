@@ -16,6 +16,28 @@ use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
+
+    function index()
+    {
+        $users = User::where('role', 'guest')
+                     ->orWhere('role', 'user')
+                     ->get();
+        return response()->json([
+            "Users" => $users
+        ]);
+    }
+
+    function desactivate($id){
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+        $user->account_active = false;
+        $user->save();
+        return response()->json(['mensaje' => 'Usuario desactivado']);
+    }
+
+    
     function getCode($userId){
         $codigo = Str::random(6);
         $hashedCode = hash('sha256', $codigo);
@@ -23,7 +45,6 @@ class UserController extends Controller
         return $codigo;
     }
     
-
     function isCodeActive($userId){
         $user = User::find($userId);
         if(!$user){
@@ -31,6 +52,7 @@ class UserController extends Controller
         }
         return response()->json(['isActive' => $user->code_verified]);
     }
+    
     function verifyCode(Request $request) {
         $validator = Validator::make($request->all(), [
             'codigo' => 'required|min:6|max:6',
@@ -160,5 +182,12 @@ class UserController extends Controller
         $userFind->save();
         $user->currentAccessToken()->delete();        
         return response()->json(['status' => true]);
+    }
+
+    function totalUsers(){
+        $users = User::all();
+        return response()->json([
+            "total" => $users->count()
+        ]);
     }
 }
