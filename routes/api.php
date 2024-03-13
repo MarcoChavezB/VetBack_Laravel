@@ -166,6 +166,8 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::post('/store', [PetController::class, 'store']);
                     Route::get('/index/{id}', [PetController::class, 'getPetsByUser'])->where('id', '[0-9]+');
                     Route::get('/userpets/{id}', [PetController::class, 'userPets']);
+                    Route::get('/show/{id}', [PetController::class, 'show']);
+                    Route::put('/update/{id}', [PetController::class, 'update']);
                 });
 
                 Route::prefix('/specie')->group(function () {

@@ -41,7 +41,7 @@ class VetAppointmentController extends Controller
             ->get();
 
         if ($vetAppointments->isEmpty()) {
-            return response()->json(['message' => 'No hay citas registradas'], 404);
+            return response()->json(['success' => false,'message' => 'No hay citas registradas'], 400);
         }
 
         return response()->json(['vet_appointments' => $vetAppointments], 200);
@@ -56,7 +56,7 @@ class VetAppointmentController extends Controller
             ->get();
 
         if ($vetAppointments->isEmpty()) {
-            return response()->json(['message' => 'No hay citas registradas'], 404);
+            return response()->json(['success' => false,'message' => 'No hay citas registradas'], 400);
         }
 
         return response()->json(['vet_appointments' => $vetAppointments], 200);
@@ -71,7 +71,7 @@ class VetAppointmentController extends Controller
             ->get();
 
         if ($vetAppointments->isEmpty()) {
-            return response()->json(['message' => 'No hay citas rechazadas'], 404);
+            return response()->json(['success' => false,'message' => 'No hay citas rechazadas'], 400);
         }
 
         return response()->json(['vet_appointments' => $vetAppointments], 200);
@@ -114,6 +114,11 @@ class VetAppointmentController extends Controller
             ->select('vet_appointments.*',  'pets.name as pet')
             ->where('vet_appointments.user_id', $id)
             ->get();
+
+        if ($vetAppointments->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'No hay citas registradas'], 400);
+        }
+
         return response()->json(['vet_appointments' => $vetAppointments], 200);
     }
 
