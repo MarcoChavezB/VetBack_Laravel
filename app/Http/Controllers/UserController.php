@@ -118,7 +118,7 @@ class UserController extends Controller
 
     public function login(Request $request){
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->active()->first();
 
         if(!$user){
             return response()->json([

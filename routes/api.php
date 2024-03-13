@@ -88,6 +88,16 @@ Route::middleware(['email.verified'])->group(function () { // verifica el email 
 });
 
 
+Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
+
+    Route::get('/activeaccount', function () {
+        return response()->json([
+            'status' => true
+        ]);
+    });
+});
+
+
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
     Route::get('/authenticatetoken', function () {
@@ -98,21 +108,13 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
     Route::get('/logout', [UserController::class, 'logout']);
 
-        Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
-
-            Route::get('/activeaccount', function () {
+        Route::middleware(['code.verified'])->group(function () { // codigo verificado
+        
+            Route::get('/codeverified', function () {
                 return response()->json([
                     'status' => true
                 ]);
             });
-
-            Route::middleware(['code.verified'])->group(function () { // codigo verificado
-
-                Route::get('/codeverified', function () {
-                    return response()->json([
-                        'status' => true
-                    ]);
-                });
 
 
                 Route::middleware(['guest.auth'])->group(function () {
@@ -166,7 +168,4 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                 });
 
             });
-
-        });
-
 });

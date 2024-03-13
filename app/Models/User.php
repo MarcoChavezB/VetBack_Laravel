@@ -21,6 +21,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(VetAppointment::class);
     }
+    
+    public function scopeActive($query)
+    {
+        return $query->where('account_active', true);
+    }
 
     /**
      * The attributes that are mass assignable.
