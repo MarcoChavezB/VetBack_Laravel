@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     function index (){
+        $producto = Product::with(['category' => function ($query){
+            $query->select('id', 'category');
+        }])->where('is_active', 1)->get();
+        
         return response()->json([
-            "products" => Product::where('is_active', 1)->get()->values()
+            "products" => $producto
         ]);
     }
     
@@ -18,10 +22,10 @@ class ProductController extends Controller
     function store(Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required | min:3 | max:100 | unique:products,name',
-            'category_id' => 'required | integer | exists:categories,id',
             'description' => 'required | min:3 | max:100',
-            'price' => 'required | numeric | min:0', 
-            'stock' => 'required | integer | min:1'
+            'category_id' => 'required | integer | exists:categories,id',
+            'stock' => 'required | integer | min:1',
+            'price' => 'required | numeric | min:0'
         ], [
             'name.required' => 'El nombre es requerido',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
@@ -150,6 +154,20 @@ class ProductController extends Controller
 
         return response()->json([
             "products" => $product
+        ]);
+    }
+
+    function totalProducts(){
+        $totalProducts = Product::where('is_active', 1)->count();
+        return response()->json([
+            "total" => $totalProducts
+        ]);
+    }
+
+    function stockBajo(){
+        $productos = Product::where('stock', '<', 5)->get();
+        return response()->json([
+            "products" => $productos
         ]);
     }
 }

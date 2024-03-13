@@ -117,4 +117,17 @@ class VetAppointmentController extends Controller
         return response()->json(['vet_appointments' => $vetAppointments], 200);
     }
 
+    function totalApointments(){
+        $totalApointments = VetAppointment::all()->count();
+        return response()->json(['total' => $totalApointments], 200);
+    }
+
+    function infoAppointments(){
+        $infoAppointments = DB::table('vet_appointments')
+            ->join('users', 'vet_appointments.user_id', '=', 'users.id')
+            ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
+            ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
+            ->get();
+        return response()->json(['info' => $infoAppointments], 200);
+    }
 }
