@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::any('/authenticate', function (Request $request) {
     return response()->json(['error' => 'Token inválido'], 401);
-
 })->name('error');
 
 
@@ -48,7 +47,6 @@ Route::post('/users/desactivate/{id}', [UserController::class, 'desactivate'])
 ->name('Users.desactivate');
 
 Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
-    ->name('EmailVerification.sendVerifyCodeEmail')
     ->where('userId', '[0-9]+');
 
 
@@ -142,12 +140,14 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     });
                 });
 
-
-                Route::post('/r', [UserController::class, 'r']);
-                Route::get('/products/index', [ProductController:: class, 'index']);
-                Route::post('/products/store', [ProductController:: class, 'store']);
-                Route::delete('/products/delete/{id}', [ProductController:: class, 'destroy'])->where('id', '[0-9]+');
-                Route::put('/products/update/{id}', [ProductController:: class, 'update'])->where('id', '[0-9]+');
+                Route::prefix('/products')->group(function () {
+                    Route::get('/index', [ProductController:: class, 'index']);
+                    Route::get('/index/disabled', [ProductController:: class, 'indexDisabled']);
+                    Route::post('/store', [ProductController:: class, 'store']);
+                    Route::delete('/delete/{id}', [ProductController:: class, 'destroy'])->where('id', '[0-9]+');
+                    Route::post('/activate/{id}', [ProductController:: class, 'activateProd'])->where('id', '[0-9]+');
+                    Route::put('/update/{id}', [ProductController:: class, 'update'])->where('id', '[0-9]+');
+                });
 
                 Route::prefix('/vetappointment')->group(function () {
                     Route::post('/store', [VetAppointmentController::class, 'store']);

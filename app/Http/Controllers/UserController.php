@@ -13,12 +13,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\EmailVerificationController;
+use App\Mail\EmailCodeVerification;
 
 class UserController extends Controller
 {
 
-    function index()
-    {
+    function index(){
         $users = User::where('role', 'guest')
                      ->orWhere('role', 'user')
                      ->get();
@@ -36,23 +37,41 @@ class UserController extends Controller
         $user->save();
         return response()->json(['mensaje' => 'Usuario desactivado']);
     }
-
-    
     function getCode($userId){
         $codigo = Str::random(6);
         $hashedCode = hash('sha256', $codigo);
         Cache::put('codigo_' . $userId, $hashedCode, Carbon::now()->addMinutes(1));
         return $codigo;
     }
-    
+
     function isCodeActive($userId){
         $user = User::find($userId);
         if(!$user){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
+
+        if($user->code_verified == 0){
+            $this->sendVerifyCodeEmail($userId);
+            return response()->json([
+                "message" => "El código ha sido enviado al correo del usuario"
+            ]);
+        }
         return response()->json(['isActive' => $user->code_verified]);
     }
-    
+
+    function sendVerifyCodeEmail($userId){
+        if (!User::find($userId)){
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+        if(User::find($userId)->code_verified){
+            return response()->json(['mensaje' => 'El usuario ya ha sido verificado'], 400);
+        }
+        $user = User::find($userId);
+        $codigo = $this->getCode($userId);
+        $email = $user->email;
+        Mail::to($email)->send((new EmailCodeVerification($codigo))->build());
+    }
+
     function verifyCode(Request $request) {
         $validator = Validator::make($request->all(), [
             'codigo' => 'required|min:6|max:6',
@@ -97,10 +116,6 @@ class UserController extends Controller
     
         return response()->json(['mensaje' => 'Código inválido'], 400);
     }
-        
-
-
-
     public function register(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -137,7 +152,6 @@ class UserController extends Controller
             'message' => 'User created successfully'
         ], 201);
     }
-
     public function login(Request $request){
 
         $user = User::where('email', $request->email)->first();
@@ -169,9 +183,7 @@ class UserController extends Controller
             'token_type' => 'Bearer',
         ]);
     }
-
-    public function logout()
-    {
+    public function logout(){
         $user = Auth::user();
         
         if (!$user) {
@@ -183,7 +195,6 @@ class UserController extends Controller
         $user->currentAccessToken()->delete();        
         return response()->json(['status' => true]);
     }
-
     function totalUsers(){
         $users = User::all();
         return response()->json([
