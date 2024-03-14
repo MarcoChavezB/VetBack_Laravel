@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SpecieController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VetAppointmentController;
+use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\VetPrescriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -74,7 +75,6 @@ Route::prefix('/category')->group(function (){
 
 // MIDDLEWARES
 
-// 'email.verified' ----- rutas para verificar que el email sea valido, este ira a raiz de todas las rutas
 // 'code.verified' ----- rutas para verificar que el codigo sea valido
 // 'activeaccount.verified' ----- rutas para verificar que la cuenta sea activa, tambien ira a raiz de todas las rutas
 // 'admin.auth' ----- rutas para solo administrador
@@ -83,15 +83,6 @@ Route::prefix('/category')->group(function (){
 
 ///////////////////////////////////////////////////////////
 
-Route::middleware(['email.verified'])->group(function () { // verifica el email verificado
-
-    Route::get('/emailverified', function () {
-        return response()->json([
-            'status' => true
-        ]);
-    });
-
-});
 
 
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
@@ -104,21 +95,22 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
     Route::get('/logout', [UserController::class, 'logout']);
 
-        Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
 
-            Route::get('/activeaccount', function () {
+    Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
+
+        Route::get('/activeaccount', function () {
+            return response()->json([
+                'status' => true
+            ]);
+        });
+
+        Route::middleware(['code.verified'])->group(function () { // codigo verificado
+        
+            Route::get('/codeverified', function () {
                 return response()->json([
                     'status' => true
                 ]);
             });
-
-            Route::middleware(['code.verified'])->group(function () { // codigo verificado
-
-                Route::get('/codeverified', function () {
-                    return response()->json([
-                        'status' => true
-                    ]);
-                });
 
 
                 Route::middleware(['guest.auth'])->group(function () {
@@ -160,6 +152,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::get('/user/{id}', [VetAppointmentController::class, 'getVetAppointmentsByUser'])->where('id', '[0-9]+');
                     Route::get('/totalApointments', [VetAppointmentController::class, 'totalApointments']);
                     Route::get('/info/Appointments', [VetAppointmentController::class, 'infoAppointments']);
+
                 });
 
                 Route::prefix('/pet')->group(function () {
@@ -194,9 +187,15 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::get('/user/{id}', [VetPrescriptionController::class, 'getUserPrescriptions'])->where('id', '[0-9]+');
                 });
 
+                Route::prefix('/services')->group(function (){
+                    Route::get('/index', [ServicesController::class, 'index']);
+                    Route::get('/show/{id}', [ServicesController::class, 'show'])->where('id', '[0-9]+');
+                    Route::post('/store', [ServicesController::class, 'store']);
+                    Route::put('/update', [ServicesController::class, 'update']);
+                    Route::delete('/destroy/{id}', [ServicesController::class, 'destroy'])->where('id', '[0-9]+');
+                });
             });
 
         });
 
 });
-

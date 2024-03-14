@@ -25,7 +25,7 @@ class ActiveAccount
         };
         
         if (!$user->account_active){
-            return response()->json(['msg' => 'Aun no verificas tu correo o tu cuenta esta deshabilitada'], 403);
+            return response()->json(['msg' => 'Usuario no encontrado o deshabilitado'], 404);
         }
 
         return $next($request);
