@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\VetAppointment;
+use App\Rules\AppointmentTime;
 use App\Rules\UniqueDateTimeWithGap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,7 @@ class VetAppointmentController extends Controller
             'pet_id' => 'required|exists:pets,id',
             'user_id' => 'required|exists:users,id',
             'reason' => 'required|string|max:255',
-            'appointment_date' => 'required|date',
+            'appointment_date' => ['required', 'date', new AppointmentTime],
         ]);
 
         if ($validator->fails()) {
