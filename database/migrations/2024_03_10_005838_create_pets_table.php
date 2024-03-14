@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->enum('gender', ['Macho', 'Hembra']);
+            $table->boolean('is_active')->default(true);
             $table->unsignedBigInteger('specie_id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('specie_id')->references('id')->on('species');
