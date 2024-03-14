@@ -47,6 +47,8 @@ class VetPrescriptionController extends Controller
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
             ->join('users as pet_users', 'pets.user_id', '=', 'pet_users.id')
             ->select('vet_prescriptions.*', 'vet_users.name as vet','pet_users.name as client','pets.name as pet', 'vet_appointments.appointment_date as appointment_date')
+            ->latest('vet_prescriptions.created_at')
+            ->take(20)
             ->get();
 
         return response()->json(['prescriptions' => $vetPrescriptions], 200);

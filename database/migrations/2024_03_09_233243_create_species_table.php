@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('species', function (Blueprint $table) {
             $table->id();
-            $table->string('specie_name');
+            $table->string('specie_name')->unique();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

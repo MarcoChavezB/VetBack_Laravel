@@ -38,6 +38,9 @@ class VetAppointmentController extends Controller
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
             ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
             ->where('vet_appointments.status', 'Abierta')
+            ->where('pets.is_active', true)
+            ->latest('vet_appointments.created_at')
+            ->take(20)
             ->get();
 
         if ($vetAppointments->isEmpty()) {
@@ -53,6 +56,8 @@ class VetAppointmentController extends Controller
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
             ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
             ->where('vet_appointments.status', 'Consultada')
+            ->latest('vet_appointments.created_at')
+            ->take(20)
             ->get();
 
         if ($vetAppointments->isEmpty()) {
@@ -68,6 +73,8 @@ class VetAppointmentController extends Controller
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
             ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
             ->where('vet_appointments.status', 'Rechazada')
+            ->latest('vet_appointments.created_at')
+            ->take(20)
             ->get();
 
         if ($vetAppointments->isEmpty()) {
