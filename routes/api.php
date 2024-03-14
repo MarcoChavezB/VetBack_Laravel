@@ -43,9 +43,7 @@ Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
 
 Route::get('/users/index', [UserController::class, 'index']);
 Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);
-Route::post('/users/desactivate/{id}', [UserController::class, 'desactivate'])
-->where('id', '[0-9]+')
-->name('Users.desactivate');
+
 
 Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
     ->where('userId', '[0-9]+');
@@ -117,6 +115,11 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::get('/adminauth', function (Request $request) {
                         return response()->json(['msg' => 'bienvenido admin']);
                     });
+
+                    Route::post('/users/desactivate/{id}', [UserController::class, 'desactivate'])
+                    ->where('id', '[0-9]+')
+                    ->name('Users.desactivate');
+
                 });
 
                 Route::prefix('/products')->group(function () {

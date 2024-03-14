@@ -31,9 +31,13 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
-        $user->account_active = false;
+        if ($user->account_active == true){
+            $user->account_active = false;
+        } else {
+            $user->account_active = true;
+        }
         $user->save();
-        return response()->json(['mensaje' => 'Usuario desactivado']);
+        return response()->json(['mensaje' => 'Cambiado de status exitosamente ']);
     }
     function getCode($userId){
         $codigo = Str::random(6);
