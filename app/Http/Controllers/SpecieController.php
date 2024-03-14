@@ -27,7 +27,7 @@ class SpecieController extends Controller
     public function index(){
         $species = Specie::all();
         if ($species->isEmpty()) {
-            return response()->json(['message' => 'No hay especies registradas'], 404);
+            return response()->json(['success' => false,'message' => 'No hay especies registradas'], 400);
         }
         return response()->json(['species' => $species], 200);
     }
