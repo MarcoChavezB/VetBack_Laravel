@@ -150,8 +150,9 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
                     Route::get('/user/{id}', [VetAppointmentController::class, 'getVetAppointmentsByUser'])->where('id', '[0-9]+');
                     Route::get('/totalApointments', [VetAppointmentController::class, 'totalApointments']);
+                    Route::get('/info/Appointments', [VetAppointmentController::class, 'infoAppointments']);
+
                 });
-                Route::get('/info/Appointments', [VetAppointmentController::class, 'infoAppointments']);
 
                 Route::prefix('/pet')->group(function () {
                     Route::post('/store', [PetController::class, 'store']);
