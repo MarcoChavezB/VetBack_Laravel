@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -200,10 +201,94 @@ class ProductController extends Controller
         ]);
     }
 
+    function getTotal(Request $request){
+        $products = $request->input('products');
+        $total = 0;
+    
+        foreach ($products as $product) {
+            // Obtener el precio del producto desde la base de datos
+            $productId = $product['id'];
+            $productQuantity = $product['cantidad'];
+            $productPrice = Product::find($productId)->price;
+    
+            // Calcular el subtotal del producto y sumarlo al total
+            $subtotal = $productPrice * $productQuantity;
+            $total += $subtotal;
+        }
+    
+        return $total;
+    }
+    
+
     function stockBajo(){
         $productos = Product::where('stock', '<', 5)->get();
         return response()->json([
             "products" => $productos
+        ]);
+    }
+
+    public function realizarVenta(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'products' => 'required | array',
+            'products.*.id' => 'required | integer | exists:products,id',
+            'products.*.cantidad' => 'required | integer | min:1',
+            'customerName' => 'required | string | min:3 | max:100',
+            'customerLastName' => 'required | string | min:3 | max:100',
+            'customerPhone' => 'required | string | min:10 | max:10'
+        ], [
+            'products.required' => 'Los productos son requeridos',
+            'products.array' => 'Los productos deben ser un arreglo',
+            'products.*.id.required' => 'El id del producto es requerido',
+            'products.*.id.integer' => 'El id del producto debe ser un número entero',
+            'products.*.id.exists' => 'El producto no existe',
+            'products.*.quantity.required' => 'La cantidad es requerida',
+            'products.*.quantity.integer' => 'La cantidad debe ser un número entero',
+            'products.*.quantity.min' => 'La cantidad debe ser mayor a 0',
+
+            'customerName.required' => 'El nombre de cliente es requerido',
+            'customerName.string' => 'El nombre de cliente debe ser una cadena de texto',
+            'customerName.min' => 'El nombre de cliente debe tener al menos 3 caracteres',
+            'customerName.max' => 'El nombre de cliente  debe tener como máximo 100 caracteres',
+
+            'customerLastName.required' => 'El apellido de cliente es requerido',
+            'customerLastName.string' => 'El apellido de cliente  debe ser una cadena de texto',
+            'customerLastName.min' => 'El apellido de cliente  debe tener al menos 3 caracteres',
+            'customerLastName.max' => 'El apellido de cliente  debe tener como máximo 100 caracteres',
+
+            'customerPhone.required' => 'El teléfono de cliente  es requerido',
+            'customerPhone.string' => 'El teléfono de cliente  debe ser una cadena de texto',
+            'customerPhone.min' => 'El teléfono de cliente  debe tener 10 caracteres',
+            'customerPhone.max' => 'El teléfono de cliente  debe tener 10 caracteres'
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'error' => $validator->errors()
+            ], 400);
+        }
+
+        foreach ($request->products as $index => $product) {
+            $productId = $product['id'];
+            $productQuantity = $product['cantidad'];
+            $stock = Product::find($productId)->stock;
+        
+            if ($productQuantity > $stock) {
+                return response()->json([
+                    "error" => "El producto con id $productId no tiene suficiente stock"
+                ], 400);
+            }
+        }
+
+        $productos = json_encode($request->products);
+        $customerName = $request->customerName;
+        $customerLast = $request->customerLastName;
+        $customerPhone = $request->customerPhone;
+
+        DB::select("CALL RealizarVenta('$customerName', '$customerLast', '$customerPhone', '$productos')");
+
+        return response()->json([
+            "message" => "Venta realizada con éxito",
         ]);
     }
 }

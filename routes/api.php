@@ -64,6 +64,8 @@ Route::prefix('/product')->group(function (){
     Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
     Route::get('/totalProducts', [ProductController::class, 'totalProducts']);
     Route::get('/stockBajo', [ProductController::class, 'stockBajo']);
+    Route::post('/venta', [ProductController::class, 'realizarVenta']);
+    Route::post('/getTotal', [ProductController::class, 'getTotal']);
 });
 
 Route::prefix('/category')->group(function (){
@@ -184,3 +186,4 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
         });
 
 });
+Route::post('/r', [UserController::class, 'insert']);
