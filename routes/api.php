@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SpecieController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VetAppointmentController;
+use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\VetPrescriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -173,6 +174,13 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::get('/user/{id}', [VetPrescriptionController::class, 'getUserPrescriptions'])->where('id', '[0-9]+');
                 });
 
+                Route::prefix('/services')->group(function (){
+                    Route::get('/index', [ServicesController::class, 'index']);
+                    Route::get('/show/{id}', [ServicesController::class, 'show'])->where('id', '[0-9]+');
+                    Route::post('/store', [ServicesController::class, 'store']);
+                    Route::put('/update', [ServicesController::class, 'update']);
+                    Route::delete('/destroy/{id}', [ServicesController::class, 'destroy'])->where('id', '[0-9]+');
+                });
             });
 
         });
