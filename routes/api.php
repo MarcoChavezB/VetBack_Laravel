@@ -29,6 +29,8 @@ Route::any('/authenticate', function (Request $request) {
 
 
 /////////////////////////////// sin loguearse ////////////////////////////////////
+
+
 Route::post('/store', [UserController::class, 'register']);
 
 Route::post('/login', [UserController::class, 'login']);
@@ -41,9 +43,6 @@ Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
     ->name('Users.getCode')
     ->where('userId', '[0-9]+');
 
-Route::get('/users/index', [UserController::class, 'index']);
-Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);
-
 
 Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
     ->where('userId', '[0-9]+');
@@ -53,24 +52,6 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
     ->name('Users.isCodeActive')
     ->where('userId', '[0-9]+');
 
-
-Route::prefix('/product')->group(function (){
-    Route::get('/index', [ProductController::class, 'index']);
-    Route::post('/store', [ProductController::class, 'store']);
-    Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
-    Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
-    Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
-    Route::get('/totalProducts', [ProductController::class, 'totalProducts']);
-    Route::get('/stockBajo', [ProductController::class, 'stockBajo']);
-    Route::post('/venta', [ProductController::class, 'realizarVenta']);
-    Route::post('/getTotal', [ProductController::class, 'getTotal']);
-});
-
-Route::prefix('/category')->group(function (){
-    Route::get('/index', [CategoryController::class, 'index']);
-});
-
-
 ///////////////////////////////////////////////////////////
 
 // MIDDLEWARES
@@ -78,7 +59,6 @@ Route::prefix('/category')->group(function (){
 // 'code.verified' ----- rutas para verificar que el codigo sea valido
 // 'activeaccount.verified' ----- rutas para verificar que la cuenta sea activa, tambien ira a raiz de todas las rutas
 // 'admin.auth' ----- rutas para solo administrador
-// 'guest.auth' ----- rutas para solo invitado
 // 'usuario.auth' ----- rutas para solo usuarios
 
 ///////////////////////////////////////////////////////////
@@ -120,6 +100,36 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     ->where('id', '[0-9]+')
                     ->name('Users.desactivate');
 
+                    Route::get('/users/index', [UserController::class, 'index']);
+                    Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);    
+
+                });
+
+
+                Route::prefix('/product')->group(function (){
+                    Route::post('/getTotal', [ProductController::class, 'getTotal']);
+                    Route::get('/index', [ProductController::class, 'index']);
+                    Route::get('/totalProducts', [ProductController::class, 'totalProducts']);
+                    Route::get('/stockBajo', [ProductController::class, 'stockBajo']);
+
+                    Route::middleware(['usuario.auth'])->group(function () {
+
+                        Route::post('/store', [ProductController::class, 'store']);
+                        Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
+                        Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
+                        Route::post('/venta', [ProductController::class, 'realizarVenta']);
+
+                        Route::middleware(['admin.auth'])->group(function () {
+                            Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
+                        });
+
+                    });
+
+                   
+                });
+
+                Route::prefix('/category')->group(function (){
+                    Route::get('/index', [CategoryController::class, 'index']);
                 });
 
                 Route::prefix('/products')->group(function () {
