@@ -91,6 +91,9 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     });
                 });
 
+                Route::get('/users/index', [UserController::class, 'index']);
+                Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);  
+                
                 Route::middleware(['admin.auth'])->group(function () {
                     Route::get('/adminauth', function (Request $request) {
                         return response()->json(['msg' => 'bienvenido admin']);
@@ -99,9 +102,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::post('/users/desactivate/{id}', [UserController::class, 'desactivate'])
                     ->where('id', '[0-9]+')
                     ->name('Users.desactivate');
-
-                    Route::get('/users/index', [UserController::class, 'index']);
-                    Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);    
+  
 
                 });
 
