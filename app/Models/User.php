@@ -54,12 +54,7 @@ class User extends Authenticatable
         // 'account_active',
         'code_verified',
         'email_verified',
-<<<<<<< HEAD
-        'role',
-        'code'
-=======
         // 'role'
->>>>>>> ae2b47678cf943603d554ca3ec1e5761873b0cb9
     ];
 
     /**

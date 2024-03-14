@@ -19,6 +19,10 @@ class ProductController extends Controller
         ]);
     }
 
+    function ventasIndex(){
+    
+    }
+
     function indexDisabled (){
         $producto = Product::with(['category' => function ($query){
             $query->select('id', 'category');
