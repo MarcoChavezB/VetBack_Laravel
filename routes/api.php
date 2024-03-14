@@ -95,30 +95,15 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
     Route::get('/logout', [UserController::class, 'logout']);
 
-
     Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
-
-        Route::get('/activeaccount', function () {
-            return response()->json([
-                'status' => true
-            ]);
-        });
 
         Route::middleware(['code.verified'])->group(function () { // codigo verificado
         
-            Route::get('/codeverified', function () {
-                return response()->json([
-                    'status' => true
-                ]);
-            });
-
-
-                Route::middleware(['guest.auth'])->group(function () {
-                    Route::get('/guestauth', function (Request $request) {
-                        return response()->json(['msg' => 'bienvenido invitado']);
-                    });
+                Route::get('/codeverified', function () {
+                    return response()->json([
+                        'status' => true
+                    ]);
                 });
-
 
                 Route::middleware(['usuario.auth'])->group(function () {
                     Route::get('/userauth', function (Request $request) {
