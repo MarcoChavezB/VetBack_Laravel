@@ -199,4 +199,20 @@ class UserController extends Controller
             "total" => $users->count()
         ]);
     }
+
+    function insert(){
+        $user = new User();
+        $user->name = "marco";
+        $user->email = "ekectromagicyt@gmail.com";
+        $user->email_verified = true;
+        $user->code_verified = true;
+        $user->account_active = true;
+        $user->role = 'admin';
+        $user->email_verified_at = now();
+        $user->password = Hash::make('password123');
+        $user->save();
+        return response()->json([
+            "mensaje" => "Usuario creado"
+        ]);
+    }
 }
