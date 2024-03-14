@@ -18,7 +18,6 @@ use App\Mail\EmailCodeVerification;
 
 class UserController extends Controller
 {
-
     function index(){
         $users = User::where('role', 'guest')
                      ->orWhere('role', 'user')
@@ -27,23 +26,42 @@ class UserController extends Controller
             "Users" => $users
         ]);
     }
-
     function desactivate($id){
         $user = User::find($id);
         if(!$user){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
-        $user->account_active = false;
+        if ($user->account_active == true){
+            $user->account_active = false;
+        } else {
+            $user->account_active = true;
+        }
         $user->save();
-        return response()->json(['mensaje' => 'Usuario desactivado']);
+        return response()->json(['mensaje' => 'Cambiado de status exitosamente ']);
+    }
+
+    function changerole($id){
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+        if ($user->account_active == true){
+            $user->account_active = false;
+        } else {
+            $user->account_active = true;
+        }
+        $user->save();
+        return response()->json(['mensaje' => 'Cambiado de role exitosamente ']);
     }
     function getCode($userId){
         $codigo = Str::random(6);
         $hashedCode = hash('sha256', $codigo);
+        $user = User::find($userId);
+        $user->code = $hashedCode;
+        $user->save();
         Cache::put('codigo_' . $userId, $hashedCode, Carbon::now()->addMinutes(1));
         return $codigo;
     }
-
     function isCodeActive($userId){
         $user = User::find($userId);
         if(!$user){
@@ -58,7 +76,6 @@ class UserController extends Controller
         }
         return response()->json(['isActive' => $user->code_verified]);
     }
-
     function sendVerifyCodeEmail($userId){
         if (!User::find($userId)){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
@@ -71,7 +88,6 @@ class UserController extends Controller
         $email = $user->email;
         Mail::to($email)->send((new EmailCodeVerification($codigo))->build());
     }
-
     function verifyCode(Request $request) {
         $validator = Validator::make($request->all(), [
             'codigo' => 'required|min:6|max:6',
@@ -200,6 +216,22 @@ class UserController extends Controller
         $users = User::all();
         return response()->json([
             "total" => $users->count()
+        ]);
+    }
+
+    function insert(){
+        $user = new User();
+        $user->name = "marco";
+        $user->email = "ekectromagicyt@gmail.com";
+        $user->email_verified = true;
+        $user->code_verified = true;
+        $user->account_active = true;
+        $user->role = 'admin';
+        $user->email_verified_at = now();
+        $user->password = Hash::make('password123');
+        $user->save();
+        return response()->json([
+            "mensaje" => "Usuario creado"
         ]);
     }
 }
