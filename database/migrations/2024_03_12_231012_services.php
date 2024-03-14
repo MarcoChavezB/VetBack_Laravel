@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('species', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('specie_name')->unique();
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
+            $table->string('name');
+            $table->text('description'); 
+            $table->decimal('price', 10, 2);
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->nullable();
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('species');
+        //
     }
 };

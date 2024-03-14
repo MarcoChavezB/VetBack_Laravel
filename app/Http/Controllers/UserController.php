@@ -152,7 +152,7 @@ class UserController extends Controller
     }
     public function login(Request $request){
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->active()->first();
 
         if(!$user){
             return response()->json([
@@ -187,6 +187,7 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['msg' => 'Usuario no encontrado'], 404);
         };
+
         $userFind = User::find($user->id);
         $userFind->code_verified = false;
         $userFind->save();

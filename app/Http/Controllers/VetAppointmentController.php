@@ -38,10 +38,13 @@ class VetAppointmentController extends Controller
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
             ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
             ->where('vet_appointments.status', 'Abierta')
+            ->where('pets.is_active', true)
+            ->latest('vet_appointments.created_at')
+            ->take(20)
             ->get();
 
         if ($vetAppointments->isEmpty()) {
-            return response()->json(['message' => 'No hay citas registradas'], 404);
+            return response()->json(['success' => false,'message' => 'No hay citas registradas'], 400);
         }
 
         return response()->json(['vet_appointments' => $vetAppointments], 200);
@@ -53,10 +56,12 @@ class VetAppointmentController extends Controller
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
             ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
             ->where('vet_appointments.status', 'Consultada')
+            ->latest('vet_appointments.created_at')
+            ->take(20)
             ->get();
 
         if ($vetAppointments->isEmpty()) {
-            return response()->json(['message' => 'No hay citas registradas'], 404);
+            return response()->json(['success' => false,'message' => 'No hay citas registradas'], 400);
         }
 
         return response()->json(['vet_appointments' => $vetAppointments], 200);
@@ -68,10 +73,12 @@ class VetAppointmentController extends Controller
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
             ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
             ->where('vet_appointments.status', 'Rechazada')
+            ->latest('vet_appointments.created_at')
+            ->take(20)
             ->get();
 
         if ($vetAppointments->isEmpty()) {
-            return response()->json(['message' => 'No hay citas rechazadas'], 404);
+            return response()->json(['success' => false,'message' => 'No hay citas rechazadas'], 400);
         }
 
         return response()->json(['vet_appointments' => $vetAppointments], 200);
@@ -114,6 +121,11 @@ class VetAppointmentController extends Controller
             ->select('vet_appointments.*',  'pets.name as pet')
             ->where('vet_appointments.user_id', $id)
             ->get();
+
+        if ($vetAppointments->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'No hay citas registradas'], 400);
+        }
+
         return response()->json(['vet_appointments' => $vetAppointments], 200);
     }
 
