@@ -64,6 +64,7 @@ Route::prefix('/product')->group(function (){
     Route::get('/stockBajo', [ProductController::class, 'stockBajo']);
     Route::post('/venta', [ProductController::class, 'realizarVenta']);
     Route::post('/getTotal', [ProductController::class, 'getTotal']);
+    Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
 });
 
 Route::prefix('/category')->group(function (){

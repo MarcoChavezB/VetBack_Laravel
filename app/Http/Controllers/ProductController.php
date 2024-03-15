@@ -19,8 +19,14 @@ class ProductController extends Controller
         ]);
     }
 
-    function ventasIndex(){
-    
+    function getProductByName($name){
+        $producto = Product::with(['category' => function ($query){
+            $query->select('id', 'category');
+        }])->where('name', 'like', "%$name%")->get();
+        
+        return response()->json([
+            "products" => $producto
+        ]);
     }
 
     function indexDisabled (){
@@ -189,7 +195,7 @@ class ProductController extends Controller
 
         if(!$product){
             return response()->json([
-                "error" => "Producto no encontrado"
+                "message" => false
             ], 404);
         }
 
