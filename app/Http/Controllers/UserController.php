@@ -39,6 +39,20 @@ class UserController extends Controller
         $user->save();
         return response()->json(['mensaje' => 'Cambiado de status exitosamente ']);
     }
+
+    function changerole($id){
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+        if ($user->account_active == true){
+            $user->account_active = false;
+        } else {
+            $user->account_active = true;
+        }
+        $user->save();
+        return response()->json(['mensaje' => 'Cambiado de role exitosamente ']);
+    }
     function getCode($userId){
         $codigo = Str::random(6);
         $hashedCode = hash('sha256', $codigo);
