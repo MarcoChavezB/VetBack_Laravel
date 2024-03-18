@@ -61,8 +61,7 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
 // 'admin.auth' ----- rutas para solo administrador
 // 'usuario.auth' ----- rutas para solo usuarios
 
-///////////////////////////////////////////////////////////
-
+///////////////////////////////////////////////////////////  
 
 
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
@@ -108,8 +107,8 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
 
                 Route::prefix('/product')->group(function (){
-                    Route::post('/getTotal', [ProductController::class, 'getTotal']);
                     Route::get('/index', [ProductController::class, 'index']);
+                    Route::post('/getTotal', [ProductController::class, 'getTotal']);
                     Route::get('/totalProducts', [ProductController::class, 'totalProducts']);
                     Route::get('/stockBajo', [ProductController::class, 'stockBajo']);
 
@@ -131,6 +130,10 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                 Route::prefix('/category')->group(function (){
                     Route::get('/index', [CategoryController::class, 'index']);
+                    Route::get('/getCategory/{id}', [CategoryController::class, 'getCategory'])->where('id', '[0-9]+');
+                    Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->where('id', '[0-9]+');
+                    Route::get('/index/desactivated', [CategoryController::class, 'indexDesactivated']);
+                    Route::post('/activate/{id}', [CategoryController::class, 'indexActivate'])->where('id', '[0-9]+');
                 });
 
                 Route::prefix('/products')->group(function () {

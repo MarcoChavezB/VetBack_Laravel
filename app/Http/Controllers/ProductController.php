@@ -20,6 +20,26 @@ class ProductController extends Controller
         ]);
     }
 
+    function destroy($id){
+        $producto = Product::find($id);
+    
+        if(!$producto){
+            return response()->json([
+                "error" => "Producto no encontrado"
+            ], 404);
+        }
+    
+        $producto->is_active = false;
+        $producto->save();
+    
+        $productosActivos = Product::where('is_active', 1)->get();
+    
+        return response()->json([
+            "message" => "Producto eliminado con éxito",
+            "products" => $productosActivos
+        ]);
+    }
+
 
     function getProductByName($name){
         $producto = Product::with(['category' => function ($query){
@@ -94,25 +114,7 @@ class ProductController extends Controller
         ]);
     }
 
-    function destroy($id){
-        $producto = Product::find($id);
-    
-        if(!$producto){
-            return response()->json([
-                "error" => "Producto no encontrado"
-            ], 404);
-        }
-    
-        $producto->is_active = false;
-        $producto->save();
-    
-        $productosActivos = Product::where('is_active', 1)->get();
-    
-        return response()->json([
-            "message" => "Producto eliminado con éxito",
-            "products" => $productosActivos
-        ]);
-    }
+
 
     function activateProd($id){
         $producto = Product::find($id);
