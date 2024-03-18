@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,6 +19,7 @@ class ProductController extends Controller
             "products" => $producto
         ]);
     }
+
 
     function getProductByName($name){
         $producto = Product::with(['category' => function ($query){

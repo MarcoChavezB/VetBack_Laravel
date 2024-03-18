@@ -120,7 +120,6 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
                         Route::post('/venta', [ProductController::class, 'realizarVenta']);
                         Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
-
                         Route::middleware(['admin.auth'])->group(function () {
                             Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
                         });
@@ -131,7 +130,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                 });
 
                 Route::prefix('/category')->group(function (){
-                    Route::get('/index', [CategoryController::class, 'index']);
+                    Route::get('/index', [CategoryController::class, 'index']);}
                 });
 
                 Route::prefix('/products')->group(function () {

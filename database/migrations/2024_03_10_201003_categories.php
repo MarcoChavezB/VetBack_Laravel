@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('category', ['alimento', 'juguete', 'medicina', 'accesorio']);
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('created_at')->nullable();
-            
+            $table->boolean('is_active')->default(true);
             $table->text('description');
         });
     }
