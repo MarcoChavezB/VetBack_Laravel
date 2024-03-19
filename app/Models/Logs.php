@@ -12,8 +12,12 @@ class Logs extends Eloquent
         'id_usuario',
         'endpoint',
         'method',
-        'data_sent', //los datos enviados
-        'data_received', // los datos recibidos, en caso de get sera poner el query
+        'data_sent',
+        'data_received', 
         'date'
     ];
+
+
 }
+
+

@@ -69,6 +69,6 @@ class Kernel extends HttpKernel
         'admin.auth' => \App\Http\Middleware\role\AdminMiddleware::class,
         'guest.auth' => \App\Http\Middleware\role\GuestMiddleware::class,
         'usuario.auth' => \App\Http\Middleware\role\UsuaMiddleware::class,
-        'Logs.request' =>\App\Http\Middleware\LogRequestMiddleware::class,
+        'Logs.request' =>\App\Http\Middleware\LogMiddleware::class,
     ];
 }

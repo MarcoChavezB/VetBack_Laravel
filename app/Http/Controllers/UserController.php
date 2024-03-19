@@ -234,4 +234,12 @@ class UserController extends Controller
             "mensaje" => "Usuario creado"
         ]);
     }
+
+    function forid($id){
+        $userFind = User::find($id);
+        if (!$userFind) {
+            return response()->json(['msg' => 'Usuario no encontrado'], 400);
+        };
+        return response()->json($userFind);
+    }
 }

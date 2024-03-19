@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PetController;
@@ -94,8 +95,6 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         });
                     });
 
-                    Route::get('/users/index', [UserController::class, 'index']);
-                    Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);  
                     
                     Route::middleware(['admin.auth'])->group(function () {
                         Route::get('/adminauth', function (Request $request) {
@@ -105,6 +104,15 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::post('/users/desactivate/{id}', [UserController::class, 'desactivate'])
                         ->where('id', '[0-9]+')
                         ->name('Users.desactivate');
+
+                        Route::prefix('/users')->group(function (){
+                            Route::get('/index', [UserController::class, 'index']);
+                            Route::get('/totalUsers', [UserController::class, 'totalUsers']);  
+                            Route::get('/logsindex', [LogController::class, 'getLogs']);
+                            Route::get('/logsmethod/{num}', [LogController::class, 'filterLogsByMethod'])->where('num', '[0-9]+');
+                            Route::get('/xid/{id}', [UserController::class, 'forid'])->where('num', '[0-9]+');
+
+                        });
     
 
                     });
@@ -169,6 +177,11 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                             Route::put('/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
                             Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
                             Route::get('/user/{id}', [VetAppointmentController::class, 'getVetAppointmentsByUser'])->where('id', '[0-9]+');
+                        Route::post('/store', [ProductController::class, 'store']);
+                        Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
+                        Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
+                        Route::post('/venta', [ProductController::class, 'realizarVenta']);
+                        Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
 
                         });
 
