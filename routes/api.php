@@ -136,10 +136,9 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                     Route::prefix('/category')->group(function (){
                         Route::get('/index', [CategoryController::class, 'index']);
+                        Route::post('/store', [CategoryController::class, 'store']);
                     });
-
                     Route::prefix('/products')->group(function () {
-
                         Route::get('/index', [ProductController:: class, 'index']);
                         Route::get('/index/disabled', [ProductController:: class, 'indexDisabled']);
 
