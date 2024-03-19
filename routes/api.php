@@ -94,7 +94,8 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         });
                     });
 
-                    
+                    Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);  
+
                     Route::middleware(['admin.auth'])->group(function () {
                         Route::get('/adminauth', function (Request $request) {
                             return response()->json(['msg' => 'bienvenido admin']);
@@ -106,7 +107,6 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                         Route::prefix('/users')->group(function (){
                             Route::get('/index', [UserController::class, 'index']);
-                            Route::get('/totalUsers', [UserController::class, 'totalUsers']);  
                             Route::get('/logsindex', [LogController::class, 'getLogs']);
                             Route::get('/logsmethod/{num}', [LogController::class, 'filterLogsByMethod'])->where('num', '[0-9]+');
                             Route::get('/xid/{id}', [UserController::class, 'forid'])->where('num', '[0-9]+');
@@ -162,6 +162,37 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         });
                     });
 
+                    Route::prefix('/category')->group(function (){
+                        Route::get('/index', [CategoryController::class, 'index']);
+                        Route::get('/getCategory/{id}', [CategoryController::class, 'getCategory'])->where('id', '[0-9]+');
+                        Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->where('id', '[0-9]+');
+                        Route::get('/index/desactivated', [CategoryController::class, 'indexDesactivated']);
+                        Route::post('/activate/{id}', [CategoryController::class, 'indexActivate'])->where('id', '[0-9]+');
+                    });
+
+                    Route::prefix('/pet')->group(function () {
+
+                        Route::get('/index/{id}', [PetController::class, 'userPets'])->where('id', '[0-9]+');
+                        Route::get('/userpets/{id}', [PetController::class, 'userPets'])->where('id', '[0-9]+');
+                        Route::get('/activatedPets', [PetController::class, 'index']);
+                        Route::get('/deactivatedPets', [PetController::class, 'deactivatedPets']);
+                        Route::middleware(['usuario.auth'])->group(function () {
+
+                            Route::post('/store', [PetController::class, 'store']);
+                            Route::get('/show/{id}', [PetController::class, 'show'])->where('id', '[0-9]+');
+                            Route::put('/update/{id}', [PetController::class, 'update'])->where('id', '[0-9]+');
+                            Route::put('/activate/{id}', [PetController::class, 'activate'])->where('id', '[0-9]+');
+                            Route::get('/active/name/{name}', [PetController::class, 'findActivePetByName'])->where('name', '[a-zA-Z\- ]+');
+                            Route::get('/deactivated/name/{name}', [PetController::class, 'findDeactivatedPetByName'])->where('name', '[a-zA-Z\- ]+');
+
+                            Route::middleware(['admin.auth'])->group(function () {
+                                Route::delete('/delete/{id}', [PetController::class, 'destroy'])->where('id', '[0-9]+');
+                            });    
+
+                        });
+                    });
+                    
+
                     Route::prefix('/vetappointment')->group(function () {
                         Route::get('/index', [VetAppointmentController::class, 'index']);
                         Route::get('/canceled/index', [VetAppointmentController::class, 'cancelledIndex']);
@@ -183,38 +214,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                             Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
                             Route::middleware(['admin.auth'])->group(function () {
                                 Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
-                        });
-
-                    });
-
-                    Route::prefix('/pet')->group(function () {
-
-                        Route::get('/index/{id}', [PetController::class, 'userPets'])->where('id', '[0-9]+');
-                        Route::get('/userpets/{id}', [PetController::class, 'userPets'])->where('id', '[0-9]+');
-                        Route::get('/activatedPets', [PetController::class, 'index']);
-                        Route::get('/deactivatedPets', [PetController::class, 'deactivatedPets']);
-                    });
-
-                    Route::prefix('/category')->group(function (){
-                        Route::get('/index', [CategoryController::class, 'index']);
-                        Route::get('/getCategory/{id}', [CategoryController::class, 'getCategory'])->where('id', '[0-9]+');
-                        Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->where('id', '[0-9]+');
-                        Route::get('/index/desactivated', [CategoryController::class, 'indexDesactivated']);
-                        Route::post('/activate/{id}', [CategoryController::class, 'indexActivate'])->where('id', '[0-9]+');
-                    });
-
-                        Route::middleware(['usuario.auth'])->group(function () {
-
-                            Route::post('/store', [PetController::class, 'store']);
-                            Route::get('/show/{id}', [PetController::class, 'show'])->where('id', '[0-9]+');
-                            Route::put('/update/{id}', [PetController::class, 'update'])->where('id', '[0-9]+');
-                            Route::put('/activate/{id}', [PetController::class, 'activate'])->where('id', '[0-9]+');
-                            Route::get('/active/name/{name}', [PetController::class, 'findActivePetByName'])->where('name', '[a-zA-Z\- ]+');
-                            Route::get('/deactivated/name/{name}', [PetController::class, 'findDeactivatedPetByName'])->where('name', '[a-zA-Z\- ]+');
-
-                            Route::middleware(['admin.auth'])->group(function () {
-                                Route::delete('/delete/{id}', [PetController::class, 'destroy'])->where('id', '[0-9]+');
-                            });    
+                            });
 
                         });
 
