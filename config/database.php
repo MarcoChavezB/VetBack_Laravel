@@ -90,7 +90,11 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'dsn' => env('DB_URI', 'mongodb+srv://root:Hnvk6321@mongodbserver.mmkrp8a.mongodb.net/'),
+            'database' => 'vetdb'
+        ]
     ],
 
     /*
