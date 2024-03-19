@@ -111,7 +111,6 @@ class CategoryController extends Controller
                 'error' => $validator->errors()
             ], 400);
         }
-
         $category = new Category();
         $category->category = $request->category;
         $category->description = $request->description;
