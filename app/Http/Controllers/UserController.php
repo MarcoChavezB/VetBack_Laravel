@@ -45,10 +45,10 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
-        if ($user->account_active == true){
-            $user->account_active = false;
+        if ($user->role == 'guest'){
+            $user->role = 'user';
         } else {
-            $user->account_active = true;
+            $user->role = 'guest';
         }
         $user->save();
         return response()->json(['mensaje' => 'Cambiado de role exitosamente ']);

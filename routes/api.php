@@ -110,7 +110,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                             Route::get('/logsindex', [LogController::class, 'getLogs']);
                             Route::get('/logsmethod/{num}', [LogController::class, 'filterLogsByMethod'])->where('num', '[0-9]+');
                             Route::get('/xid/{id}', [UserController::class, 'forid'])->where('num', '[0-9]+');
-
+                            Route::get('/changerole/{id}', [UserController::class, 'changerole']);
                         });
     
 
@@ -168,7 +168,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::get('/active/name/{name}', [PetController::class, 'findActivePetByName'])->where('name', '[a-zA-Z\- ]+');
                         Route::get('/deactivated/name/{name}', [PetController::class, 'findDeactivatedPetByName'])->where('name', '[a-zA-Z\- ]+');    
                         Route::get('/deactivatedPets', [PetController::class, 'deactivatedPets']);
-                        
+
                         Route::middleware(['usuario.auth'])->group(function () {
 
                             Route::post('/store', [PetController::class, 'store']);
@@ -233,8 +233,13 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::get('/index', [VetPrescriptionController::class, 'index']);
                     
                         Route::middleware(['usuario.auth'])->group(function () {
-                            Route::post('/store', [VetPrescriptionController::class, 'store']);
+
                             Route::get('/user/{id}', [VetPrescriptionController::class, 'getUserPrescriptions'])->where('id', '[0-9]+');
+
+                            Route::middleware(['admin.auth'])->group(function () {  
+                                Route::post('/store', [VetPrescriptionController::class, 'store']);
+                            });
+
                         });
                     });
 

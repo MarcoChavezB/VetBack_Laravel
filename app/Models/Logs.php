@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
+use App\Models\User;
 
 class Logs extends Eloquent
 {
@@ -17,7 +18,7 @@ class Logs extends Eloquent
         'date'
     ];
 
-
+   
 }
 
 
