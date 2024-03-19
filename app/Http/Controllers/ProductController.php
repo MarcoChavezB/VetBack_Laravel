@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -44,7 +45,8 @@ class ProductController extends Controller
     function getProductByName($name){
         $producto = Product::with(['category' => function ($query){
             $query->select('id', 'category');
-        }])->where('name', 'like', "%$name%")->get();
+        }])->where('name', 'like', "%$name%")
+        ->where('stock', '>', 0)->get();
         
         return response()->json([
             "products" => $producto
@@ -63,13 +65,20 @@ class ProductController extends Controller
 
 
     function store(Request $request){
+
+        
+        Validator::extend('alpha_spaces', function($attribute, $value) {
+            return preg_match('/^[\pL\s]+$/u', $value);
+        });
+
         $validator = Validator::make($request->all(), [
-            'name' => 'required | min:3 | max:100 | unique:products,name',
-            'description' => 'required | min:3 | max:100',
+            'name' => 'alpha_spaces | required | min:3 | max:100 | unique:products,name',
+            'description' => 'alpha_spaces | required | min:3 | max:100',
             'category_id' => 'required | integer | exists:categories,id',
             'stock' => 'required | integer | min:1',
             'price' => 'required | numeric | min:1'
         ], [
+            'name.alpha_spaces' => 'El nombre debe contener solo letras',
             'name.required' => 'El nombre es requerido',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
             'name.max' => 'El nombre debe tener como máximo 100 caracteres',
@@ -79,6 +88,7 @@ class ProductController extends Controller
             'category_id.integer' => 'La categoría debe ser un número entero',
             'category_id.exists' => 'La categoría no existe',
 
+            'description.alpha_spaces' => 'La descripción debe contener solo letras',
             'description.required' => 'La descripción es requerida',
             'description.min' => 'La descripción debe tener al menos 3 caracteres',
             'description.max' => 'La descripción debe tener como máximo 100 caracteres',
@@ -134,20 +144,26 @@ class ProductController extends Controller
     }
     
     function update(Request $request, $id){
+
+        Validator::extend('alpha_spaces', function($attribute, $value) {
+            return preg_match('/^[\pL\s]+$/u', $value);
+        });
+
         $validator = Validator::make($request->all(), [
-            'name' => 'min:3 | max:100',
+            'name' => 'alpha_spaces | min:3 | max:100',
             'category_id' => 'integer | exists:categories,id',
-            'description' => 'min:3 | max:100',
+            'description' => 'alpha_spaces | min:3 | max:100',
             'price' => 'numeric | min:1', 
             'stock' => 'integer | min:1'
         ], [
-
+            'name.alpha_spaces' => 'El nombre debe contener solo letras',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
             'name.max' => 'El nombre debe tener como máximo 100 caracteres',
 
             'category_id.integer' => 'La categoría debe ser un número entero',
             'category_id.exists' => 'La categoría no existe',
 
+            'description.alpha_spaces' => 'La descripción debe contener solo letras',
             'description.min' => 'La descripción debe tener al menos 3 caracteres',
             'description.max' => 'La descripción debe tener como máximo 100 caracteres',
             
@@ -298,11 +314,35 @@ class ProductController extends Controller
         $customerName = $request->customerName;
         $customerLast = $request->customerLastName;
         $customerPhone = $request->customerPhone;
+        $total = $request->total;
 
-        DB::select("CALL RealizarVenta('$customerName', '$customerLast', '$customerPhone', '$productos')");
+        DB::select("CALL RealizarVenta('$customerName', '$customerLast', '$customerPhone', '$productos', '$total')");
 
         return response()->json([
             "message" => "Venta realizada con éxito",
         ]);
+    }
+
+    public function indexVetas()
+    {
+        $ventas = Order::with('customer', 'orderDetails.product')->get();
+
+        $ventasInfo = $ventas->map(function ($venta) {
+            return [
+                'cliente' => [ 
+                    'nombre' => $venta->customer->name,
+                    'telefono' => $venta->customer->phone,
+                ],
+                'fecha_venta' => now()->parse($venta->created_at)->format('d-m-Y'),
+                'productos' => $venta->orderDetails->map(function ($detalle) {
+                    return [
+                        'producto' => $detalle->product->name,
+                        'cantidad' => $detalle->quantity,
+                    ];
+                }),
+                'total' => $venta->Total,
+            ];
+         });
+        return response()->json($ventasInfo);
     }
 }

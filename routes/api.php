@@ -263,4 +263,4 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
     });
 });
-Route::post('/r', [UserController::class, 'insert']);
+
