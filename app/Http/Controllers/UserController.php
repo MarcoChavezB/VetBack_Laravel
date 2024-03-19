@@ -54,7 +54,14 @@ class UserController extends Controller
         return response()->json(['mensaje' => 'Cambiado de role exitosamente ']);
     }
     function getCode($userId){
-        $codigo = Str::random(6);
+        if(!$userId){
+            return response()->json(['mensaje' => 'paramtero no valido'], 404);
+        }
+
+        if(!User::find($userId)){
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+        $codigo = random_int(100000, 999999); 
         $hashedCode = hash('sha256', $codigo);
         $user = User::find($userId);
         $user->code = $hashedCode;

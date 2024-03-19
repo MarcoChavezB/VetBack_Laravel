@@ -62,8 +62,7 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
 // 'admin.auth' ----- rutas para solo administrador
 // 'usuario.auth' ----- rutas para solo usuarios
 
-///////////////////////////////////////////////////////////
-
+///////////////////////////////////////////////////////////  
 
 
 
@@ -177,12 +176,13 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                             Route::put('/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
                             Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
                             Route::get('/user/{id}', [VetAppointmentController::class, 'getVetAppointmentsByUser'])->where('id', '[0-9]+');
-                        Route::post('/store', [ProductController::class, 'store']);
-                        Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
-                        Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
-                        Route::post('/venta', [ProductController::class, 'realizarVenta']);
-                        Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
-
+                            Route::post('/store', [ProductController::class, 'store']);
+                            Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
+                            Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
+                            Route::post('/venta', [ProductController::class, 'realizarVenta']);
+                            Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
+                            Route::middleware(['admin.auth'])->group(function () {
+                                Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
                         });
 
                     });
@@ -193,6 +193,15 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::get('/userpets/{id}', [PetController::class, 'userPets'])->where('id', '[0-9]+');
                         Route::get('/activatedPets', [PetController::class, 'index']);
                         Route::get('/deactivatedPets', [PetController::class, 'deactivatedPets']);
+                    });
+
+                    Route::prefix('/category')->group(function (){
+                        Route::get('/index', [CategoryController::class, 'index']);
+                        Route::get('/getCategory/{id}', [CategoryController::class, 'getCategory'])->where('id', '[0-9]+');
+                        Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->where('id', '[0-9]+');
+                        Route::get('/index/desactivated', [CategoryController::class, 'indexDesactivated']);
+                        Route::post('/activate/{id}', [CategoryController::class, 'indexActivate'])->where('id', '[0-9]+');
+                    });
 
                         Route::middleware(['usuario.auth'])->group(function () {
 
