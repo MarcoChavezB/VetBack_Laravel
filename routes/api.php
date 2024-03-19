@@ -111,14 +111,14 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::post('/getTotal', [ProductController::class, 'getTotal']);
                     Route::get('/totalProducts', [ProductController::class, 'totalProducts']);
                     Route::get('/stockBajo', [ProductController::class, 'stockBajo']);
-
+                    Route::get('/vetas/index', [ProductController::class, 'indexVetas']);
+                    Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
                     Route::middleware(['usuario.auth'])->group(function () {
-
                         Route::post('/store', [ProductController::class, 'store']);
                         Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
                         Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
                         Route::post('/venta', [ProductController::class, 'realizarVenta']);
-                        Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
+                        
                         Route::middleware(['admin.auth'])->group(function () {
                             Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
                         });
@@ -134,13 +134,15 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->where('id', '[0-9]+');
                     Route::get('/index/desactivated', [CategoryController::class, 'indexDesactivated']);
                     Route::post('/activate/{id}', [CategoryController::class, 'indexActivate'])->where('id', '[0-9]+');
+                    Route::put('/update/{id}', [CategoryController::class, 'update'])->where('id', '[0-9]+');
+                    Route::post('/store', [CategoryController::class, 'store']);
+
                 });
 
                 Route::prefix('/products')->group(function () {
 
                     Route::get('/index', [ProductController:: class, 'index']);
                     Route::get('/index/disabled', [ProductController:: class, 'indexDisabled']);
-
                     Route::middleware(['usuario.auth'])->group(function () {
 
                         Route::post('/store', [ProductController:: class, 'store']);
