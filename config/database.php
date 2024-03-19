@@ -92,7 +92,7 @@ return [
         ],
         'mongodb' => [
             'driver' => 'mongodb',
-            'dsn' => env('DB_URI', 'mongodb+srv://root:Hnvk6321@mongodbserver.mmkrp8a.mongodb.net/'),
+            'dsn' => env('DB_URI', 'mongodb+srv://tony20402014:UnnjZDmyuMGAtuMw@cluster0.rqrbewe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'),
             'database' => 'vetdb'
         ]
     ],
