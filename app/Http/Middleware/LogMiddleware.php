@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -11,6 +12,18 @@ class LogMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        $queries = [];
+
+        if ($request->isMethod('GET')) {
+            DB::listen(function ($query) use (&$queries) {
+                $queries[] = [
+                    'query' => $query->sql,
+                    'bindings' => $query->bindings,
+                    'time' => $query->time,
+                ];
+            });
+        }
+
         $startTime = microtime(true);
 
         $response = $next($request);
@@ -23,7 +36,7 @@ class LogMiddleware
             'endpoint' => $request->path(),
             'method' => $request->method(),
             'data_sent' => $request->all(),
-            'data_received' => $request->method() == 'GET' ? $request->query() : $response->getContent(),
+            'data_received' => $request->method() == 'GET' ? json_encode($queries) : $response->getContent(),
             'date' => now()->toDateTimeString(),
         ]);        
 
