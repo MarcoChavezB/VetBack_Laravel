@@ -135,6 +135,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     });
 
                     Route::prefix('/category')->group(function (){
+                        Route::put('/update/{id}', [CategoryController::class, 'update']);
                         Route::get('/index', [CategoryController::class, 'index']);
                         Route::post('/store', [CategoryController::class, 'store']);
                     });
