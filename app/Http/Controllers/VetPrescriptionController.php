@@ -71,4 +71,39 @@ class VetPrescriptionController extends Controller
 
         return response()->json(['prescriptions' => $vetPrescriptions], 200);
     }
+
+    public function findByName($name){
+        $prescriptions = DB::table('vet_prescriptions')
+            ->join('users as vet_users', 'vet_prescriptions.vet_id', '=', 'vet_users.id')
+            ->join('vet_appointments', 'vet_prescriptions.vet_appointment_id', '=', 'vet_appointments.id')
+            ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
+            ->join('users as pet_users', 'pets.user_id', '=', 'pet_users.id')
+            ->select('vet_prescriptions.*', 'vet_users.name as vet','pet_users.name as client','pets.name as pet', 'vet_appointments.appointment_date as appointment_date')
+            ->where('pet_users.name', 'like', '%'.$name.'%')
+            ->get();
+
+        if ($prescriptions->isEmpty()) {
+            return response()->json(['success' => false,'message' => 'No hay recetas registradas'], 400);
+        }
+
+        return response()->json(['prescriptions' => $prescriptions], 200);
+    }
+
+    public function findUserPrescriptionsByDate($date, $id){
+        $prescriptions = DB::table('vet_prescriptions')
+            ->join('users as vet_users', 'vet_prescriptions.vet_id', '=', 'vet_users.id')
+            ->join('vet_appointments', 'vet_prescriptions.vet_appointment_id', '=', 'vet_appointments.id')
+            ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
+            ->join('users as pet_users', 'pets.user_id', '=', 'pet_users.id')
+            ->select('vet_prescriptions.*', 'vet_users.name as vet','pet_users.name as client','pets.name as pet', 'vet_appointments.appointment_date as appointment_date')
+            ->where('pet_users.id', $id)
+            ->whereDate('vet_appointments.created_at', $date)
+            ->get();
+
+        if ($prescriptions->isEmpty()) {
+            return response()->json(['success' => false,'message' => 'No hay recetas registradas'], 400);
+        }
+
+        return response()->json(['prescriptions' => $prescriptions], 200);
+    }
 }

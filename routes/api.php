@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LogController;
+use App\Events\TestEvent;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PetController;
@@ -65,8 +66,12 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
 // 'admin.auth' ----- rutas para solo administrador
 // 'usuario.auth' ----- rutas para solo usuarios
 
-///////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////
 
+Route::get('/test-event', function () {
+    event(new TestEvent(['message' => 'This is a test message!']));
+    return "Event has been sent!";
+});
 
 
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
@@ -84,7 +89,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
         Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
 
             Route::middleware(['code.verified'])->group(function () { // codigo verificado
-            
+
                     Route::get('/codeverified', function () {
                         return response()->json([
                             'status' => true
@@ -97,7 +102,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         });
                     });
 
-                    Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);  
+                    Route::get('/users/totalUsers', [UserController::class, 'totalUsers']);
 
                     Route::middleware(['admin.auth'])->group(function () {
                         Route::get('/adminauth', function (Request $request) {
@@ -115,7 +120,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                             Route::get('/xid/{id}', [UserController::class, 'forid'])->where('num', '[0-9]+');
                             Route::get('/changerole/{id}', [UserController::class, 'changerole']);
                         });
-    
+
 
                     });
 
@@ -124,17 +129,17 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::post('/getTotal', [ProductController::class, 'getTotal']);
                         Route::get('/index', [ProductController::class, 'index']);
                         Route::get('/totalProducts', [ProductController::class, 'totalProducts']);
-                        Route::get('/stockBajo', [ProductController::class, 'stockBajo']);                        
+                        Route::get('/stockBajo', [ProductController::class, 'stockBajo']);
                         Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
                         Route::get('/ventas/index', [ProductController::class, 'indexVetas']);
                         Route::middleware(['admin.auth'])->group(function () {
                             Route::post('/store', [ProductController::class, 'store']);
                             Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
                             Route::get('/show/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
-                            Route::post('/venta', [ProductController::class, 'realizarVenta']);    
+                            Route::post('/venta', [ProductController::class, 'realizarVenta']);
                             Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
                         });
-                    
+
                     });
 
                     Route::prefix('/category')->group(function (){
@@ -152,7 +157,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                                 Route::post('/store', [ProductController:: class, 'store']);
                                 Route::delete('/delete/{id}', [ProductController:: class, 'destroy'])->where('id', '[0-9]+');
                             });
-                            
+
                     });
 
                     Route::prefix('/category')->group(function (){
@@ -169,7 +174,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::get('/userpets/{id}', [PetController::class, 'userPets'])->where('id', '[0-9]+');
                         Route::get('/activatedPets', [PetController::class, 'index']);
                         Route::get('/active/name/{name}', [PetController::class, 'findActivePetByName'])->where('name', '[a-zA-Z\- ]+');
-                        Route::get('/deactivated/name/{name}', [PetController::class, 'findDeactivatedPetByName'])->where('name', '[a-zA-Z\- ]+');    
+                        Route::get('/deactivated/name/{name}', [PetController::class, 'findDeactivatedPetByName'])->where('name', '[a-zA-Z\- ]+');
                         Route::get('/deactivatedPets', [PetController::class, 'deactivatedPets']);
 
                         Route::middleware(['usuario.auth'])->group(function () {
@@ -177,17 +182,20 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                             Route::post('/store', [PetController::class, 'store']);
                             Route::get('/show/{id}', [PetController::class, 'show'])->where('id', '[0-9]+');
                             Route::put('/update/{id}', [PetController::class, 'update'])->where('id', '[0-9]+');
+                            Route::get('/find/name/{name}/{id}', [PetController::class, 'findUserPetByName'])
+                                ->where('name', '[a-zA-Z\- ]+')
+                                ->where('id', '[0-9]+');
 
                             Route::middleware(['admin.auth'])->group(function () {
 
                                 Route::delete('/delete/{id}', [PetController::class, 'destroy'])->where('id', '[0-9]+');
                                 Route::put('/activate/{id}', [PetController::class, 'activate'])->where('id', '[0-9]+');
 
-                            });    
+                            });
 
                         });
                     });
-                    
+
 
                     Route::prefix('/vetappointment')->group(function () {
                         Route::get('/index', [VetAppointmentController::class, 'index']);
@@ -199,13 +207,18 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::middleware(['usuario.auth'])->group(function () {
 
                             Route::post('/store', [VetAppointmentController::class, 'store']);
-                            Route::get('/user/{id}', [VetAppointmentController::class, 'getVetAppointmentsByUser'])->where('id', '[0-9]+');    
+                            Route::get('/user/{id}', [VetAppointmentController::class, 'getVetAppointmentsByUser'])->where('id', '[0-9]+');
+                            Route::get('/find/date/{date}/{id}', [VetAppointmentController::class, 'findUserAppointmentsByDate'])
+                                ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+                                ->where('id', '[0-9]+');
 
                             Route::middleware(['admin.auth'])->group(function () {
                                 Route::put('/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
                                 Route::put('/reject/{id}', [VetAppointmentController::class, 'markAsRejected'])->where('id', '[0-9]+');
                                 Route::put('/reopen/{id}', [VetAppointmentController::class, 'reOpen'])->where('id', '[0-9]+');
-
+                                Route::get('/find/name/{name}', [VetAppointmentController::class, 'findByName'])->where('name', '[a-zA-Z\- ]+');
+                                Route::get('/find/cancelled/name/{name}', [VetAppointmentController::class, 'findCancelledByName'])->where('name', '[a-zA-Z\- ]+');
+                                Route::get('/find/completed/name/{name}', [VetAppointmentController::class, 'findCompletedByName'])->where('name', '[a-zA-Z\- ]+');
                             });
 
                         });
@@ -217,7 +230,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::get('/index', [SpecieController::class, 'index']);
                         Route::get('/active/name/{name}', [SpecieController::class, 'findActiveSpeciesByName'])->where('name', '[a-zA-Z\- ]+');
                         Route::get('/deactivated/index', [SpecieController::class, 'deactivatedIndex']);
-                        Route::get('/deactivated/name/{name}', [SpecieController::class, 'findDeactivatedSpeciesByName'])->where('name', '[a-zA-Z\- ]+');  
+                        Route::get('/deactivated/name/{name}', [SpecieController::class, 'findDeactivatedSpeciesByName'])->where('name', '[a-zA-Z\- ]+');
 
                         Route::middleware(['usuario.auth'])->group(function () {
                             Route::post('/store', [SpecieController::class, 'store']);
@@ -225,7 +238,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                             Route::put('/update/{id}', [SpecieController::class, 'update'])->where('id', '[0-9]+');
                             Route::get('/show/{id}', [SpecieController::class, 'show'])->where('id', '[0-9]+');
 
-                            Route::middleware(['admin.auth'])->group(function () {  
+                            Route::middleware(['admin.auth'])->group(function () {
                                 Route::delete('/delete/{id}', [SpecieController::class, 'destroy'])->where('id', '[0-9]+');
                             });
                         });
@@ -234,13 +247,16 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                     Route::prefix('/vetprescription')->group(function (){
                         Route::get('/index', [VetPrescriptionController::class, 'index']);
-                    
+
                         Route::middleware(['usuario.auth'])->group(function () {
-
                             Route::get('/user/{id}', [VetPrescriptionController::class, 'getUserPrescriptions'])->where('id', '[0-9]+');
+                            Route::get('/find/date/{date}/{id}', [VetPrescriptionController::class, 'findUserPrescriptionsByDate'])
+                                ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+                                ->where('id', '[0-9]+');
 
-                            Route::middleware(['admin.auth'])->group(function () {  
+                            Route::middleware(['admin.auth'])->group(function () {
                                 Route::post('/store', [VetPrescriptionController::class, 'store']);
+                                Route::get('/find/name/{name}', [VetPrescriptionController::class, 'findByName']);
                             });
 
                         });
