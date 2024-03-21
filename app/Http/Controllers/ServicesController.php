@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Service;
 use Illuminate\Support\Facades\Validator;
+use App\Events\ServiceEvent;
 
 use Illuminate\Http\Request;
 
@@ -27,6 +28,8 @@ class ServicesController extends Controller
             'description' => $request->description,
             'price' => $request->price,
         ]);
+
+        event(new ServiceEvent(['message' => 'hay un nuevo servicio']));
 
         return response()->json($service);
     }
