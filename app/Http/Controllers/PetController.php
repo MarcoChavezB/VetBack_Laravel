@@ -53,6 +53,26 @@ class PetController extends Controller
 
     }
 
+
+    public function findUserPetByName($name, $id){
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['success' => false,'message' => 'Usuario no encontrado'], 400);
+        }
+        $pets = Pet::where('user_id', $id)->where('name', 'like', '%'.$name.'%')->get();
+        if ($pets->isEmpty()) {
+            return response()->json(['success' => false,'message' => 'No hay mascotas registradas'], 400);
+        }
+        $pets = DB::table('pets')
+            ->join('species', 'pets.specie_id', '=', 'species.id')
+            ->select('pets.*', 'species.specie_name as specie')
+            ->where('pets.user_id', $id)
+            ->where('pets.name', 'like', '%'.$name.'%')
+            ->where('pets.is_active', true)
+            ->get();
+        return response()->json(['pets' => $pets], 200);
+    }
+
     public function show($id){
         $pet = Pet::find($id);
         if (!$pet) {
