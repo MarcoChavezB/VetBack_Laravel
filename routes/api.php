@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::post('/r', [UserController::class, 'insert']);
 Route::any('/authenticate', function (Request $request) {
     return response()->json(['error' => 'Token inválido'], 401);
 })->name('error');
