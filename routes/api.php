@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::post('/r', [UserController::class, 'insert']);
 Route::any('/authenticate', function (Request $request) {
     return response()->json(['error' => 'Token inválido'], 401);
 })->name('error');
@@ -110,7 +110,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                             Route::get('/logsindex', [LogController::class, 'getLogs']);
                             Route::get('/logsmethod/{num}', [LogController::class, 'filterLogsByMethod'])->where('num', '[0-9]+');
                             Route::get('/xid/{id}', [UserController::class, 'forid'])->where('num', '[0-9]+');
-
+                            Route::get('/changerole/{id}', [UserController::class, 'changerole']);
                         });
 
 
@@ -123,7 +123,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::get('/totalProducts', [ProductController::class, 'totalProducts']);
                         Route::get('/stockBajo', [ProductController::class, 'stockBajo']);
                         Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
-
+                        Route::get('/ventas/index', [ProductController::class, 'indexVetas']);
                         Route::middleware(['admin.auth'])->group(function () {
                             Route::post('/store', [ProductController::class, 'store']);
                             Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
@@ -135,6 +135,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     });
 
                     Route::prefix('/category')->group(function (){
+                        Route::put('/update/{id}', [CategoryController::class, 'update']);
                         Route::get('/index', [CategoryController::class, 'index']);
                         Route::post('/store', [CategoryController::class, 'store']);
                     });
@@ -173,6 +174,9 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                             Route::post('/store', [PetController::class, 'store']);
                             Route::get('/show/{id}', [PetController::class, 'show'])->where('id', '[0-9]+');
                             Route::put('/update/{id}', [PetController::class, 'update'])->where('id', '[0-9]+');
+                            Route::get('/find/name/{name}/{id}', [PetController::class, 'findUserPetByName'])
+                                ->where('name', '[a-zA-Z\- ]+')
+                                ->where('id', '[0-9]+');
 
                             Route::middleware(['admin.auth'])->group(function () {
 
@@ -196,6 +200,9 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                             Route::post('/store', [VetAppointmentController::class, 'store']);
                             Route::get('/user/{id}', [VetAppointmentController::class, 'getVetAppointmentsByUser'])->where('id', '[0-9]+');
+                            Route::get('/find/date/{date}/{id}', [VetAppointmentController::class, 'findUserAppointmentsByDate'])
+                                ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+                                ->where('id', '[0-9]+');
 
                             Route::middleware(['admin.auth'])->group(function () {
                                 Route::put('/complete/{id}', [VetAppointmentController::class, 'markAsCompleted'])->where('id', '[0-9]+');
@@ -235,10 +242,15 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                         Route::middleware(['usuario.auth'])->group(function () {
                             Route::get('/user/{id}', [VetPrescriptionController::class, 'getUserPrescriptions'])->where('id', '[0-9]+');
+                            Route::get('/find/date/{date}/{id}', [VetPrescriptionController::class, 'findUserPrescriptionsByDate'])
+                                ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+                                ->where('id', '[0-9]+');
 
                             Route::middleware(['admin.auth'])->group(function () {
                                 Route::post('/store', [VetPrescriptionController::class, 'store']);
+                                Route::get('/find/name/{name}', [VetPrescriptionController::class, 'findByName']);
                             });
+
                         });
                     });
 

@@ -45,10 +45,10 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
-        if ($user->account_active == true){
-            $user->account_active = false;
+        if ($user->role == 'guest'){
+            $user->role = 'user';
         } else {
-            $user->account_active = true;
+            $user->role = 'guest';
         }
         $user->save();
         return response()->json(['mensaje' => 'Cambiado de role exitosamente ']);
@@ -61,7 +61,7 @@ class UserController extends Controller
         if(!User::find($userId)){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
-        $codigo = random_int(100000, 999999); 
+        $codigo = random_int(100000, 999999);
         $hashedCode = hash('sha256', $codigo);
         $user = User::find($userId);
         $user->code = $hashedCode;
@@ -107,28 +107,28 @@ class UserController extends Controller
             'userId.required' => 'El userId es requerido',
             'userId.integer' => 'El userId debe ser un número entero'
         ]);
-    
+
         $validatorErrors = $validator->errors()->toArray();
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validatorErrors
             ], 400);
         }
-    
+
         $usuario_id = $request->userId;
         $codigo_ingresado = $request->codigo;
-    
+
         if (!User::find($usuario_id)) {
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
         }
-    
+
         if (!Cache::has('codigo_' . $usuario_id)) {
             return response()->json(['mensaje' => 'Código no válido'], 400);
         }
-    
+
         $hashedCode = Cache::get('codigo_' . $usuario_id);
-    
+
         if (hash_equals($hashedCode, hash('sha256', $codigo_ingresado))) {
             Cache::forget('codigo_' . $usuario_id);
             $user = User::find($usuario_id);
@@ -136,7 +136,7 @@ class UserController extends Controller
             $user->save();
             return response()->json(['mensaje' => 'Código válido']);
         }
-    
+
         return response()->json(['mensaje' => 'Código inválido'], 400);
     }
     public function register(Request $request){
@@ -208,7 +208,7 @@ class UserController extends Controller
     }
     public function logout(){
         $user = Auth::user();
-        
+
         if (!$user) {
             return response()->json(['msg' => 'Usuario no encontrado'], 404);
         };
@@ -216,7 +216,7 @@ class UserController extends Controller
         $userFind = User::find($user->id);
         $userFind->code_verified = false;
         $userFind->save();
-        $user->currentAccessToken()->delete();        
+        $user->currentAccessToken()->delete();
         return response()->json(['status' => true]);
     }
     function totalUsers(){
