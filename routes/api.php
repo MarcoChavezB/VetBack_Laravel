@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::post('/r', [UserController::class, 'insert']);
 Route::any('/authenticate', function (Request $request) {
     return response()->json(['error' => 'Token inválido'], 401);
 })->name('error');
@@ -123,7 +123,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                         Route::get('/totalProducts', [ProductController::class, 'totalProducts']);
                         Route::get('/stockBajo', [ProductController::class, 'stockBajo']);                        
                         Route::get('/getProduct/{name}', [ProductController::class, 'getProductByName'])->where('name', '[a-zA-Z\- ]+');
-
+                        Route::get('/ventas/index', [ProductController::class, 'indexVetas']);
                         Route::middleware(['admin.auth'])->group(function () {
                             Route::post('/store', [ProductController::class, 'store']);
                             Route::put('/update/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
@@ -135,6 +135,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     });
 
                     Route::prefix('/category')->group(function (){
+                        Route::put('/update/{id}', [CategoryController::class, 'update']);
                         Route::get('/index', [CategoryController::class, 'index']);
                         Route::post('/store', [CategoryController::class, 'store']);
                     });
