@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotifyEvent;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -259,6 +261,7 @@ class ProductController extends Controller
 
     public function realizarVenta(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'products' => 'required | array',
             'products.*.id' => 'required | integer | exists:products,id',
@@ -316,8 +319,18 @@ class ProductController extends Controller
         $customerPhone = $request->customerPhone;
         $total = $request->total;
 
-        DB::select("CALL RealizarVenta('$customerName', '$customerLast', '$customerPhone', '$productos', '$total')");
-
+        DB::transaction(function () use ($customerName, $customerLast, $customerPhone, $productos, $total) {
+            // Llamar al procedimiento almacenado para realizar la venta
+            DB::select("CALL RealizarVenta('$customerName', '$customerLast', '$customerPhone', '$productos', '$total')");
+        
+            // Obtener los administradores
+            $administradores = User::where('role', 'admin')->get();
+        
+            // Enviar notificación a los administradores
+            foreach ($administradores as $admin) {
+                event(new NotifyEvent("Se ha realizado una venta por un total de $total"));
+            }
+        });
         return response()->json([
             "message" => "Venta realizada con éxito",
         ]);

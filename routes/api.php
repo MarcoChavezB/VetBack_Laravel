@@ -25,9 +25,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-
-Route::get('/r', [UserController::class, 'insert']);
 Route::any('/authenticate', function (Request $request) {
     return response()->json(['error' => 'Token inválido'], 401);
 })->name('error');
