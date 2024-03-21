@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LogController;
+use App\Events\TestEvent;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PetController;
@@ -64,6 +65,10 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
 
 ///////////////////////////////////////////////////////////
 
+Route::get('/test-event', function () {
+    event(new TestEvent(['message' => 'This is a test message!']));
+    return "Event has been sent!";
+});
 
 
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
