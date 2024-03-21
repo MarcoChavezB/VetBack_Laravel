@@ -23,7 +23,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/r', [UserController::class, 'insert']);
+
+
+
+Route::get('/r', [UserController::class, 'insert']);
 Route::any('/authenticate', function (Request $request) {
     return response()->json(['error' => 'Token inválido'], 401);
 })->name('error');
@@ -68,7 +71,7 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
 
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
-    Route::middleware(['Logs.request'])->group(function () { // Loguea todas las solicitudes
+    Route::middleware([])->group(function () { // Loguea todas las solicitudes
 
         Route::get('/authenticatetoken', function () {
             return response()->json([
