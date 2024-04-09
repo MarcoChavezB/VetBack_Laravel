@@ -265,7 +265,6 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                             Route::middleware(['admin.auth'])->group(function () {
                                 Route::delete('/destroy/{id}', [ServicesController::class, 'destroy'])->where('id', '[0-9]+');
-                                Route::post('/sse', [ServicesController::class, 'sse']);
                         });
                     });
 
@@ -276,4 +275,6 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
     });
 });
+
+Route::get('/services/sse', [ServicesController::class, 'sse']);
 
