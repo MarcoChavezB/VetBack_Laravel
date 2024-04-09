@@ -55,7 +55,7 @@ class UserController extends Controller
     }
     function getCode($userId){
         if(!$userId){
-            return response()->json(['mensaje' => 'paramtero no valido'], 404);
+            return response()->json(['mensaje' => 'parametro no valido'], 404);
         }
 
         if(!User::find($userId)){

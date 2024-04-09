@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AppointmentStored;
 use App\Models\VetAppointment;
 use App\Rules\AppointmentTime;
 use App\Rules\UniqueDateTimeWithGap;
@@ -29,6 +30,9 @@ class VetAppointmentController extends Controller
         $vetAppointment->pet_id = $request->pet_id;
         $vetAppointment->user_id = $request->user_id;
         $vetAppointment->save();
+
+        event(new AppointmentStored(['msg' => 'Nueva cita registrada']));
+
 
         return response()->json(["success" => true, "message"=>"Cita registrada correctamente"], 201);
     }

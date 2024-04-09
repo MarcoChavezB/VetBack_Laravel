@@ -69,7 +69,7 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
 
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
-    //Route::middleware(['Logs.request'])->group(function () { // Loguea todas las solicitudes
+    Route::middleware(['Logs.request'])->group(function () { // Loguea todas las solicitudes
 
         Route::get('/authenticatetoken', function () {
             return response()->json([
@@ -271,7 +271,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                 });
             });
 
-        //});
+        });
 
     });
 });
