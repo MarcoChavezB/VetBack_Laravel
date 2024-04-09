@@ -16,7 +16,7 @@ class ServicesController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors()
@@ -41,7 +41,7 @@ class ServicesController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors()
@@ -66,10 +66,33 @@ class ServicesController extends Controller
         if(!$service){
             return response()->json(['status' => false], 400);
         }
-        
+
         $service->delete();
 
         return response()->json(['status' => true], 204);
+    }
+
+    public function sse($message = "Se elimino un servicio"){
+
+        if (connection_status() != CONNECTION_NORMAL){
+            return;
+        }
+
+
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+
+        try {
+            echo 'data:' . json_encode($message) . "\n\n";
+
+            ob_flush();
+            flush();
+        } catch (\Exception $e) {
+            echo 'data:' . json_encode($e->getMessage()) . "\n\n";
+            ob_flush();
+            flush();
+        }
     }
 
     public function index()

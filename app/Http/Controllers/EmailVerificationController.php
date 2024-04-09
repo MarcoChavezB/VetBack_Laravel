@@ -19,9 +19,9 @@ class EmailVerificationController extends Controller
     }
 
     public function verify_email(Request $request, int $user_id){
-        if (!$request->hasValidSignature()) {
-            return view('emails.EmailVerificationError');
-        }
+            if (!$request->hasValidSignature()) {
+                return view('emails.EmailVerificationErrorView');
+            }
 
         $user = User::find($user_id);
 
