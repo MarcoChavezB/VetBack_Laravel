@@ -31,13 +31,121 @@ public function getLogs() {
         
             return $log;
         });
-        
-
         return response()->json(['data' => $logsConUsuarios, 'success' => true], 200);
     }
 }
 
     
+
+public function logsMethodGet() {
+    $logs = Logs::where('method', 'GET')->get();
+
+    if ($logs->isEmpty()) {
+        return response()->json(['data' => [], 'success' => false], 400);
+    } else {
+        $userIds = $logs->pluck('id_usuario')->unique();
+
+        $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
+
+        $logsConUsuarios = $logs->map(function ($log) use ($usuarios) {
+            $usuario = $usuarios->get($log->id_usuario);
+        
+            if ($usuario) {
+                $log->name = $usuario->name;
+                $log->email = $usuario->email;
+            } else {
+                $log->name = null;
+                $log->email = null;
+            }
+        
+            return $log;
+        });
+        return response()->json(['data' => $logsConUsuarios, 'success' => true], 200);
+    }
+}
+
+public function logsMethodPost() {
+    $logs = Logs::where('method', 'POST')->get();
+
+    if ($logs->isEmpty()) {
+        return response()->json(['data' => [], 'success' => false], 400);
+    } else {
+        $userIds = $logs->pluck('id_usuario')->unique();
+
+        $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
+
+        $logsConUsuarios = $logs->map(function ($log) use ($usuarios) {
+            $usuario = $usuarios->get($log->id_usuario);
+        
+            if ($usuario) {
+                $log->name = $usuario->name;
+                $log->email = $usuario->email;
+            } else {
+                $log->name = null;
+                $log->email = null;
+            }
+        
+            return $log;
+        });
+        return response()->json(['data' => $logsConUsuarios, 'success' => true], 200);
+    }
+}
+
+
+public function logsMethodPut() {
+    $logs = Logs::where('method', 'PUT')->get();
+
+    if ($logs->isEmpty()) {
+        return response()->json(['data' => [], 'success' => false], 400);
+    } else {
+        $userIds = $logs->pluck('id_usuario')->unique();
+
+        $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
+
+        $logsConUsuarios = $logs->map(function ($log) use ($usuarios) {
+            $usuario = $usuarios->get($log->id_usuario);
+        
+            if ($usuario) {
+                $log->name = $usuario->name;
+                $log->email = $usuario->email;
+            } else {
+                $log->name = null;
+                $log->email = null;
+            }
+        
+            return $log;
+        });
+        return response()->json(['data' => $logsConUsuarios, 'success' => true], 200);
+    }
+}
+
+
+public function logsMethodDelete() {
+    $logs = Logs::where('method', 'DELETE')->get();
+
+    if ($logs->isEmpty()) {
+        return response()->json(['data' => [], 'success' => false], 400);
+    } else {
+        $userIds = $logs->pluck('id_usuario')->unique();
+
+        $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
+
+        $logsConUsuarios = $logs->map(function ($log) use ($usuarios) {
+            $usuario = $usuarios->get($log->id_usuario);
+        
+            if ($usuario) {
+                $log->name = $usuario->name;
+                $log->email = $usuario->email;
+            } else {
+                $log->name = null;
+                $log->email = null;
+            }
+        
+            return $log;
+        });
+        return response()->json(['data' => $logsConUsuarios, 'success' => true], 200);
+    }
+}
 
     public function filterLogsByMethod($num) {
         $methodMap = [
@@ -75,6 +183,33 @@ public function getLogs() {
         }
     }
     
+
+  public function logsByName(String $userName) {
+    // Buscar el usuario por su nombre
+    $user = User::where('name', $userName)->first();
+
+    if (!$user) {
+        // Si el usuario no existe, devolver una respuesta de error
+        return response()->json(['data' => [], 'success' => false], 400);
+    }
+
+    // Obtener los logs asociados al usuario encontrado
+    $logs = Logs::where('id_usuario', $user->id)->get();
+
+    if ($logs->isEmpty()) {
+        // Si no hay logs asociados al usuario, devolver una respuesta de error
+        return response()->json(['data' => [], 'success' => false], 400);
+    }
+
+    // Agregar información de nombre y email al resultado
+    $logsConUsuarios = $logs->map(function ($log) use ($user) {
+        $log->name = $user->name;
+        $log->email = $user->email;
+        return $log;
+    });
+
+    return response()->json(['data' => $logsConUsuarios, 'success' => true], 200);
+}
 
     
 }

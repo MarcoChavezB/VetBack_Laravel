@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pet;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -34,19 +35,16 @@ class PetController extends Controller
     }
 
     public function userPets($id){
+        $user = Auth::user();
 
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
-        }
-        $pets = Pet::where('user_id', $id)->get();
+        $pets = Pet::where('user_id', $user->id)->get();
         if ($pets->isEmpty()) {
             return response()->json(['success' => false,'message' => 'No hay mascotas registradas'], 400);
         }
         $pets = DB::table('pets')
             ->join('species', 'pets.specie_id', '=', 'species.id')
             ->select('pets.*', 'species.specie_name as specie')
-            ->where('pets.user_id', $id)
+            ->where('pets.user_id', $user->id)
             ->where('pets.is_active', true)
             ->get();
         return response()->json(['pets' => $pets], 200);
@@ -55,18 +53,16 @@ class PetController extends Controller
 
 
     public function findUserPetByName($name, $id){
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json(['success' => false,'message' => 'Usuario no encontrado'], 400);
-        }
-        $pets = Pet::where('user_id', $id)->where('name', 'like', '%'.$name.'%')->get();
+        $user = Auth::user();
+
+        $pets = Pet::where('user_id', $user->id)->where('name', 'like', '%'.$name.'%')->get();
         if ($pets->isEmpty()) {
             return response()->json(['success' => false,'message' => 'No hay mascotas registradas'], 400);
         }
         $pets = DB::table('pets')
             ->join('species', 'pets.specie_id', '=', 'species.id')
             ->select('pets.*', 'species.specie_name as specie')
-            ->where('pets.user_id', $id)
+            ->where('pets.user_id', $user->id)
             ->where('pets.name', 'like', '%'.$name.'%')
             ->where('pets.is_active', true)
             ->get();

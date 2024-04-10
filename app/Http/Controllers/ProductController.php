@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NotifyEvent;
+use App\Events\ProductEvent;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
@@ -205,7 +206,7 @@ class ProductController extends Controller
                 "message" => "No se realizaron cambios"
             ], 400);
         }
-    
+        event(new ProductEvent("1"));
         return response()->json([
             "message" => "Producto actualizado con éxito",
             "producto" => $producto
@@ -308,7 +309,7 @@ class ProductController extends Controller
         
             if ($productQuantity > $stock) {
                 return response()->json([
-                    "error" => "El producto con id $productId no tiene suficiente stock"
+                  "stock" => "SEl producto con id $productId no tiene suficiente stock"
                 ], 400);
             }
         }
@@ -320,13 +321,8 @@ class ProductController extends Controller
         $total = $request->total;
 
         DB::transaction(function () use ($customerName, $customerLast, $customerPhone, $productos, $total) {
-            // Llamar al procedimiento almacenado para realizar la venta
             DB::select("CALL RealizarVenta('$customerName', '$customerLast', '$customerPhone', '$productos', '$total')");
-        
-            // Obtener los administradores
             $administradores = User::where('role', 'admin')->get();
-        
-            // Enviar notificación a los administradores
             foreach ($administradores as $admin) {
                 event(new NotifyEvent("Se ha realizado una venta por un total de $total"));
             }
@@ -356,6 +352,7 @@ class ProductController extends Controller
                 'total' => $venta->Total,
             ];
          });
+        $ventasInfo = $ventasInfo->reverse()->values()->toArray();
         return response()->json($ventasInfo);
     }
 }
