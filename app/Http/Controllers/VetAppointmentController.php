@@ -32,7 +32,7 @@ class VetAppointmentController extends Controller
         $vetAppointment->save();
 
         event(new AppointmentStored(['msg' => 'Nueva cita registrada']));
-
+        
 
         return response()->json(["success" => true, "message"=>"Cita registrada correctamente"], 201);
     }

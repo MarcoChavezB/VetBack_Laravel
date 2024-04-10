@@ -66,15 +66,11 @@ Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
 
 ///////////////////////////////////////////////////////////
 
-Route::get('/test-event', function () {
-    event(new TestEvent(['message' => 'This is a test message!']));
-    return "Event has been sent!";
-});
 
 
 Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
-    #Route::middleware(['Logs.request'])->group(function () { // Loguea todas las solicitudes
+    Route::middleware(['Logs.request'])->group(function () { // Loguea todas las solicitudes
 
         Route::get('/authenticatetoken', function () {
             return response()->json([
@@ -272,13 +268,14 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                             Route::middleware(['admin.auth'])->group(function () {
                                 Route::delete('/destroy/{id}', [ServicesController::class, 'destroy'])->where('id', '[0-9]+');
+                                Route::post('/sse', [ServicesController::class, 'sse']);
                         });
                     });
 
                 });
             });
 
-        #});
+        });
 
     });
 });
