@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NotifyEvent;
+use App\Events\ProductEvent;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
@@ -205,7 +206,7 @@ class ProductController extends Controller
                 "message" => "No se realizaron cambios"
             ], 400);
         }
-    
+        event(new ProductEvent("1"));
         return response()->json([
             "message" => "Producto actualizado con éxito",
             "producto" => $producto

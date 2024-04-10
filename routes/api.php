@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::any('/authenticate', function (Request $request) {
     return response()->json(['error' => 'Token inválido'], 401);
 })->name('error');
@@ -112,7 +113,9 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                         Route::prefix('/users')->group(function (){
                             Route::get('/index', [UserController::class, 'index']);
+                            Route::get('/logsMethodGet', [LogController::class, 'logsMethodGet']);
                             Route::get('/logsindex', [LogController::class, 'getLogs']);
+                                                        
                             Route::get('/logsmethod/{num}', [LogController::class, 'filterLogsByMethod'])->where('num', '[0-9]+');
                             Route::get('/xid/{id}', [UserController::class, 'forid'])->where('num', '[0-9]+');
                             Route::get('/changerole/{id}', [UserController::class, 'changerole']);

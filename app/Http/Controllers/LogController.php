@@ -31,13 +31,39 @@ public function getLogs() {
         
             return $log;
         });
-        
-
         return response()->json(['data' => $logsConUsuarios, 'success' => true], 200);
     }
 }
 
     
+
+public function logsMethodGet() {
+    $logs = Logs::where('method', 'GET')->get();
+
+    if ($logs->isEmpty()) {
+        return response()->json(['data' => [], 'success' => false], 400);
+    } else {
+        $userIds = $logs->pluck('id_usuario')->unique();
+
+        $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
+
+        $logsConUsuarios = $logs->map(function ($log) use ($usuarios) {
+            $usuario = $usuarios->get($log->id_usuario);
+        
+            if ($usuario) {
+                $log->name = $usuario->name;
+                $log->email = $usuario->email;
+            } else {
+                $log->name = null;
+                $log->email = null;
+            }
+        
+            return $log;
+        });
+        return response()->json(['data' => $logsConUsuarios, 'success' => true], 200);
+    }
+}
+
 
     public function filterLogsByMethod($num) {
         $methodMap = [
