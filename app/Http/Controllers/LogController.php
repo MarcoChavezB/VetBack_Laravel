@@ -63,6 +63,18 @@ public function getLogs() {
         }
     }
     
+    public function cleanlogs() {
+        Sensor::truncate();
+    
+        $count = Sensor::count();
+    
+        if ($count == 0){
+            return response()->json(["success" => true, "message" => "Todos los registros han sido eliminados."], 200);
+        } else {
+            return response()->json(["success" => false, "message" => "No se pudieron eliminar los registros."], 500);
+        }
+    }
+    
 
     
 }

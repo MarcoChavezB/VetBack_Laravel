@@ -37,23 +37,6 @@ Route::post('/store', [UserController::class, 'register']);
 
 Route::post('/login', [UserController::class, 'login']);
 
-
-Route::post('/verifyCode', [UserController::class, 'verifyCode'])
-    ->name('Users.verifyCode');
-
-Route::get('/getCode/{userId}', [UserController::class, 'getCode'])
-    ->name('Users.getCode')
-    ->where('userId', '[0-9]+');
-
-
-Route::post('/email/verify/code/{userId}', [EmailVerificationController::class, 'sendVerifyCodeEmail'])
-    ->where('userId', '[0-9]+');
-
-
-Route::get('/code/isActive/{userId}', [UserController::class, 'isCodeActive'])
-    ->name('Users.isCodeActive')
-    ->where('userId', '[0-9]+');
-
 ///////////////////////////////////////////////////////////
 
 // MIDDLEWARES
@@ -81,7 +64,6 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
         Route::middleware(['activeaccount.verified'])->group(function () { // verifica la cuenta activada
 
-            Route::middleware(['code.verified'])->group(function () { // codigo verificado
 
                     Route::get('/codeverified', function () {
                         return response()->json([
@@ -269,7 +251,6 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
                     });
 
                 });
-            });
 
         });
 

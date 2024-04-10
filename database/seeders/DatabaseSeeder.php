@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
                 'name' => env('ADM_NAME'),
                 'email' => env('ADM_EMAIL'),
                 'email_verified' => true,
-                'code_verified' => true,
+                
                 'account_active' => true,
                 'role' => 'admin',
                 'email_verified_at' => now(),
@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user1',
             'email' => 'user1@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'guest',
             'email_verified_at' => $now,
@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user2',
             'email' => 'user2@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'admin',
             'email_verified_at' => $now,
@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user3',
             'email' => 'user3@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'user',
             'email_verified_at' => $now,
@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user4',
             'email' => 'user4@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'user',
             'email_verified_at' => $now,
@@ -91,7 +91,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user5',
             'email' => 'user5@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'user',
             'email_verified_at' => $now,
@@ -105,7 +105,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user6',
             'email' => 'user6@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'user',
             'email_verified_at' => $now,
@@ -119,7 +119,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user7',
             'email' => 'user7@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'user',
             'email_verified_at' => $now,
@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user8',
             'email' => 'user8@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'user',
             'email_verified_at' => $now,
@@ -147,7 +147,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user9',
             'email' => 'user9@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'user',
             'email_verified_at' => $now,
@@ -161,7 +161,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'user10',
             'email' => 'user10@gmail.com',
             'email_verified' => true,
-            'code_verified' => true,
+            
             'account_active' => true,
             'role' => 'user',
             'email_verified_at' => $now,
