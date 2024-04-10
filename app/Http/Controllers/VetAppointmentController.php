@@ -7,6 +7,7 @@ use App\Models\VetAppointment;
 use App\Rules\AppointmentTime;
 use App\Rules\UniqueDateTimeWithGap;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -32,7 +33,7 @@ class VetAppointmentController extends Controller
         $vetAppointment->save();
 
         event(new AppointmentStored(['msg' => 'Nueva cita registrada']));
-        
+
 
         return response()->json(["success" => true, "message"=>"Cita registrada correctamente"], 201);
     }
@@ -120,11 +121,12 @@ class VetAppointmentController extends Controller
     }
 
     public function getVetAppointmentsByUser($id){
+        $user = Auth::user();
         $vetAppointments = DB::table('vet_appointments')
             ->join('users', 'vet_appointments.user_id', '=', 'users.id')
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
             ->select('vet_appointments.*',  'pets.name as pet')
-            ->where('vet_appointments.user_id', $id)
+            ->where('vet_appointments.user_id', $user->id)
             ->get();
 
         if ($vetAppointments->isEmpty()) {
@@ -197,11 +199,12 @@ class VetAppointmentController extends Controller
     }
 
     public function findUserAppointmentsByDate($date, $id){
+        $user = Auth::user();
         $vetAppointments = DB::table('vet_appointments')
             ->join('users', 'vet_appointments.user_id', '=', 'users.id')
             ->join('pets', 'vet_appointments.pet_id', '=', 'pets.id')
             ->select('vet_appointments.*', 'users.name as user', 'pets.name as pet')
-            ->where('vet_appointments.user_id', $id)
+            ->where('vet_appointments.user_id', $user->id)
             ->whereDate('vet_appointments.appointment_date', $date)
             ->get();
 
