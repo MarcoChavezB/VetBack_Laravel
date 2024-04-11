@@ -74,22 +74,16 @@ class ServicesController extends Controller
 
     public function sse($message = "Se elimino un servicio"){
 
-        if (connection_status() != CONNECTION_NORMAL){
-            return;
-        }
-
-
         header('Content-Type: text/event-stream');
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
         header('Access-Control-Allow-Origin: *');
 
         try {
-            echo "event: updateService\n";
             echo 'data:' . json_encode($message) . "\n\n";
-
             ob_flush();
             flush();
+            sleep(1);
         } catch (\Exception $e) {
             echo 'data:' . json_encode($e->getMessage()) . "\n\n";
             ob_flush();
