@@ -85,7 +85,6 @@ class ServicesController extends Controller
         header('Access-Control-Allow-Origin: *');
 
         try {
-            echo "event: updateService\n";
             echo 'data:' . json_encode($message) . "\n\n";
 
             ob_flush();
