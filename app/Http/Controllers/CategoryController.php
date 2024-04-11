@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Events\categoriesUpdate;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -39,6 +39,7 @@ class CategoryController extends Controller
         }
         $category->is_active = 0;
         $category->save();
+        event(new categoriesUpdate('Categoría actualizada'));
         return response()->json(['message' => 'Categoría eliminada exitosamente']);
     }
 
@@ -85,6 +86,7 @@ class CategoryController extends Controller
         $category->category = $request->category ?? $category->category;
         $category->description = $request->description ?? $category->description;
         $category->save();
+        event(new categoriesUpdate('Categoría actualizada'));
         return response()->json(['message' => 'Categoría actualizada exitosamente']);
     }
 
@@ -119,6 +121,7 @@ class CategoryController extends Controller
         $category->category = $request->category;
         $category->description = $request->description;
         $category->save();
+        event(new categoriesUpdate('Categoría actualizada'));
         return response()->json(['message' => 'Categoría creada exitosamente'], 201);
     }
 }

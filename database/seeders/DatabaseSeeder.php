@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
                 'name' => env('ADM_NAME'),
                 'email' => env('ADM_EMAIL'),
                 'email_verified' => true,
-                
                 'account_active' => true,
                 'role' => 'admin',
                 'email_verified_at' => now(),
