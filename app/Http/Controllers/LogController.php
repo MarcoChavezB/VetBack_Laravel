@@ -170,6 +170,19 @@ public function logsMethodDelete() {
             return response()->json(['data' => $logs, 'success' => true], 200); 
         }
     }
+    
+    public function cleanlogs() {
+        Logs::truncate();
+    
+        $count = Logs::count();
+    
+        if ($count == 0){
+            return response()->json(["success" => true, "message" => "Todos los registros han sido eliminados."], 200);
+        } else {
+            return response()->json(["success" => false, "message" => "No se pudieron eliminar los registros."], 500);
+        }
+    }
+    
 
   public function logsByName(String $userName) {
     // Buscar el usuario por su nombre

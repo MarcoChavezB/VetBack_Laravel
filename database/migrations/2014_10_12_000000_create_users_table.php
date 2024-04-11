@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->boolean('email_verified')->default(false);
-            $table->boolean('code_verified')->default(false);
             $table->boolean('account_active')->default(false);
             $table->enum('role', ['admin', 'user', 'guest'])->default('guest');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('code')->nullable();
             $table->string('password');
+            $table->string('2fa_code')->nullable();
+            $table->timestamp('2fa_code_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
