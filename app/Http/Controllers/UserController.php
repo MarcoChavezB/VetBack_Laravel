@@ -54,7 +54,6 @@ class UserController extends Controller
         return response()->json(['mensaje' => 'rol cambiado exitosamente']);
     }
 
-<<<<<<< HEAD
     public function login(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -140,9 +139,6 @@ class UserController extends Controller
     }
 
    
-=======
-
->>>>>>> c27eac7f9d9f37da834c5c22bc93529d7ce6124c
 
     function getCode($userId){
         if(!$userId){
