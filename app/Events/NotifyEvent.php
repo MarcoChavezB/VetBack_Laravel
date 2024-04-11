@@ -10,14 +10,16 @@ class NotifyEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $message;
+    public $data;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($message, $data = null)
     {
         $this->message = $message;
+        $this->data = $data;
     }
 
     /**

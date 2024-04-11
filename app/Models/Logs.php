@@ -16,9 +16,7 @@ class Logs extends Eloquent
         'data_sent',
         'data_received', 
         'date'
-    ];
-
-   
+    ];   
 }
 
 
