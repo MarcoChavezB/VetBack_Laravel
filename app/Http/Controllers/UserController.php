@@ -1,14 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Events\NotifyEvent;
 use Illuminate\Support\Facades\Auth;
-
 use App\Mail\EmailVerification;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -40,7 +39,7 @@ class UserController extends Controller
         return response()->json(['mensaje' => 'Cambiado de status exitosamente ']);
     }
 
-    function changerole($id){
+    function changeRole($id){
         $user = User::find($id);
         if(!$user){
             return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
@@ -51,9 +50,11 @@ class UserController extends Controller
             $user->role = 'guest';
         }
         $user->save();
-        return response()->json(['mensaje' => 'Cambiado de role exitosamente ']);
+        event(new NotifyEvent($user->role, $user->id));
+        return response()->json(['mensaje' => 'rol cambiado exitosamente']);
     }
 
+<<<<<<< HEAD
     public function login(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -139,6 +140,9 @@ class UserController extends Controller
     }
 
    
+=======
+
+>>>>>>> c27eac7f9d9f37da834c5c22bc93529d7ce6124c
 
     function getCode($userId){
         if(!$userId){
@@ -201,7 +205,6 @@ class UserController extends Controller
     }
 
     public function register(Request $request){
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3|max:255',
             'email' => 'required|email|unique:users',

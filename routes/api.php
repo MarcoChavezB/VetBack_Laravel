@@ -101,7 +101,7 @@ Route::middleware(['auth:sanctum'])->group(function () { // verifica el token
 
                             Route::get('/logsmethod/{num}', [LogController::class, 'filterLogsByMethod'])->where('num', '[0-9]+');
                             Route::get('/xid/{id}', [UserController::class, 'forid'])->where('num', '[0-9]+');
-                            Route::get('/changerole/{id}', [UserController::class, 'changerole']);
+                            Route::get('/changerole/{id}', [UserController::class, 'changeRole']);
                         });
 
 

@@ -16,7 +16,7 @@ public function getLogs() {
     } else {
         $userIds = $logs->pluck('id_usuario')->unique();
 
-        $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
+        $usuarios = User::whereIn('id', $userIds)->take(10)->get()->keyBy('id');
 
         $logsConUsuarios = $logs->map(function ($log) use ($usuarios) {
             $usuario = $usuarios->get($log->id_usuario);
