@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Events\categoriesUpdate;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -39,6 +39,7 @@ class CategoryController extends Controller
         }
         $category->is_active = 0;
         $category->save();
+        event(new categoriesUpdate('Categoría actualizada'));
         return response()->json(['message' => 'Categoría eliminada exitosamente']);
     }
 
@@ -61,17 +62,19 @@ class CategoryController extends Controller
         });
         
         $validator = Validator::make($request->all(), [
-            'category' => 'alpha_spaces|string|max:100|unique:categories,category,'.$id,
-            'description' => 'alpha_spaces | string | max:255'
+            'category' => 'alpha_spaces|string|max:100|min:3|unique:categories,category,'.$id,
+            'description' => 'alpha_spaces | string | max:255|min:3'
         ],
         [
             'category.alpha_spaces' => 'La categoría debe ser un texto',
             'category.unique' => 'La categoría ya existe',
             'category.string' => 'La categoría debe ser un texto',
             'category.max' => 'La categoría debe tener máximo 100 caracteres',
+            'category.min' => 'La categoría debe tener mínimo 3 caracteres',
             'description.alpha_spaces' => 'La descripción debe ser un texto',
             'description.string' => 'La descripción debe ser un texto',
-            'description.max' => 'La descripción debe tener máximo 255 caracteres'
+            'description.max' => 'La descripción debe tener máximo 255 caracteres',
+            'description.min' => 'La descripción debe tener mínimo 3 caracteres'
         ]); 
 
         if ($validator->fails()) {
@@ -83,6 +86,7 @@ class CategoryController extends Controller
         $category->category = $request->category ?? $category->category;
         $category->description = $request->description ?? $category->description;
         $category->save();
+        event(new categoriesUpdate('Categoría actualizada'));
         return response()->json(['message' => 'Categoría actualizada exitosamente']);
     }
 
@@ -92,18 +96,20 @@ class CategoryController extends Controller
         });
         
         $validator = Validator::make($request->all(), [
-            'category' => 'alpha_spaces|required|string|max:100|unique:categories,category',
-            'description' => 'alpha_spaces | string | max:255'
+            'category' => 'alpha_spaces|required|string|max:100|min:3|unique:categories,category',
+            'description' => 'alpha_spaces | string | max:255|min:3'
         ],
         [
             'category.alpha_spaces' => 'La categoría debe ser un texto',
             'category.unique' => 'La categoría ya existe',
             'category.string' => 'La categoría debe ser un texto',
             'category.max' => 'La categoría debe tener máximo 100 caracteres',
+            'category.min' => 'La categoría debe tener mínimo 3 caracteres',
             'category.required' => 'La categoría es requerida',
             'description.alpha_spaces' => 'La descripción debe ser un texto',
             'description.string' => 'La descripción debe ser un texto',
-            'description.max' => 'La descripción debe tener máximo 255 caracteres'
+            'description.max' => 'La descripción debe tener máximo 255 caracteres',
+            'description.min' => 'La descripción debe tener mínimo 3 caracteres', 
         ]); 
 
         if ($validator->fails()) {
@@ -115,6 +121,7 @@ class CategoryController extends Controller
         $category->category = $request->category;
         $category->description = $request->description;
         $category->save();
+        event(new categoriesUpdate('Categoría actualizada'));
         return response()->json(['message' => 'Categoría creada exitosamente'], 201);
     }
 }

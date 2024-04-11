@@ -267,9 +267,9 @@ class ProductController extends Controller
             'products' => 'required | array',
             'products.*.id' => 'required | integer | exists:products,id',
             'products.*.cantidad' => 'required | integer | min:1',
-            'customerName' => 'required | string | min:3 | max:100',
+            'customerName' => 'required | string | min:3 | max:100 | regex:/^[a-zA-Z]+$/',
             'customerLastName' => 'required | string | min:3 | max:100',
-            'customerPhone' => 'required | string | min:10 | max:10'
+            'customerPhone' => 'required | numeric | digits:10'
         ], [
             'products.required' => 'Los productos son requeridos',
             'products.array' => 'Los productos deben ser un arreglo',
@@ -284,6 +284,7 @@ class ProductController extends Controller
             'customerName.string' => 'El nombre de cliente debe ser una cadena de texto',
             'customerName.min' => 'El nombre de cliente debe tener al menos 3 caracteres',
             'customerName.max' => 'El nombre de cliente  debe tener como máximo 100 caracteres',
+            'customerName.regex' => 'El nombre de cliente debe contener solo letras',
 
             'customerLastName.required' => 'El apellido de cliente es requerido',
             'customerLastName.string' => 'El apellido de cliente  debe ser una cadena de texto',
@@ -291,9 +292,8 @@ class ProductController extends Controller
             'customerLastName.max' => 'El apellido de cliente  debe tener como máximo 100 caracteres',
 
             'customerPhone.required' => 'El teléfono de cliente  es requerido',
-            'customerPhone.string' => 'El teléfono de cliente  debe ser una cadena de texto',
-            'customerPhone.min' => 'El teléfono de cliente  debe tener 10 caracteres',
-            'customerPhone.max' => 'El teléfono de cliente  debe tener 10 caracteres'
+            'customerPhone.numeric' => 'El teléfono de cliente  debe ser un número',
+            'customerPhone.digits' => 'El teléfono de cliente  debe tener 10 dígitos'
         ]);
 
         if($validator->fails()){
@@ -309,7 +309,7 @@ class ProductController extends Controller
         
             if ($productQuantity > $stock) {
                 return response()->json([
-                  "stock" => "SEl producto con id $productId no tiene suficiente stock"
+                  "stock" => "El producto con id $productId no tiene suficiente stock"
                 ], 400);
             }
         }
