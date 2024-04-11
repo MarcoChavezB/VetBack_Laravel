@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Events\NotifyEvent;
+use App\Events\changeRole;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\EmailVerification;
 use App\Models\User;
@@ -50,7 +50,7 @@ class UserController extends Controller
             $user->role = 'guest';
         }
         $user->save();
-        event(new NotifyEvent($user->role, $user->id));
+        event(new changeRole($user->role, $user->id));
         return response()->json(['mensaje' => 'rol cambiado exitosamente']);
     }
 
