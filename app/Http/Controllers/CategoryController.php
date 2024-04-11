@@ -61,17 +61,19 @@ class CategoryController extends Controller
         });
         
         $validator = Validator::make($request->all(), [
-            'category' => 'alpha_spaces|string|max:100|unique:categories,category,'.$id,
-            'description' => 'alpha_spaces | string | max:255'
+            'category' => 'alpha_spaces|string|max:100|min:3|unique:categories,category,'.$id,
+            'description' => 'alpha_spaces | string | max:255|min:3'
         ],
         [
             'category.alpha_spaces' => 'La categoría debe ser un texto',
             'category.unique' => 'La categoría ya existe',
             'category.string' => 'La categoría debe ser un texto',
             'category.max' => 'La categoría debe tener máximo 100 caracteres',
+            'category.min' => 'La categoría debe tener mínimo 3 caracteres',
             'description.alpha_spaces' => 'La descripción debe ser un texto',
             'description.string' => 'La descripción debe ser un texto',
-            'description.max' => 'La descripción debe tener máximo 255 caracteres'
+            'description.max' => 'La descripción debe tener máximo 255 caracteres',
+            'description.min' => 'La descripción debe tener mínimo 3 caracteres'
         ]); 
 
         if ($validator->fails()) {
@@ -92,18 +94,20 @@ class CategoryController extends Controller
         });
         
         $validator = Validator::make($request->all(), [
-            'category' => 'alpha_spaces|required|string|max:100|unique:categories,category',
-            'description' => 'alpha_spaces | string | max:255'
+            'category' => 'alpha_spaces|required|string|max:100|min:3|unique:categories,category',
+            'description' => 'alpha_spaces | string | max:255|min:3'
         ],
         [
             'category.alpha_spaces' => 'La categoría debe ser un texto',
             'category.unique' => 'La categoría ya existe',
             'category.string' => 'La categoría debe ser un texto',
             'category.max' => 'La categoría debe tener máximo 100 caracteres',
+            'category.min' => 'La categoría debe tener mínimo 3 caracteres',
             'category.required' => 'La categoría es requerida',
             'description.alpha_spaces' => 'La descripción debe ser un texto',
             'description.string' => 'La descripción debe ser un texto',
-            'description.max' => 'La descripción debe tener máximo 255 caracteres'
+            'description.max' => 'La descripción debe tener máximo 255 caracteres',
+            'description.min' => 'La descripción debe tener mínimo 3 caracteres', 
         ]); 
 
         if ($validator->fails()) {
