@@ -172,9 +172,9 @@ public function logsMethodDelete() {
     }
     
     public function cleanlogs() {
-        Sensor::truncate();
+        Logs::truncate();
     
-        $count = Sensor::count();
+        $count = Logs::count();
     
         if ($count == 0){
             return response()->json(["success" => true, "message" => "Todos los registros han sido eliminados."], 200);

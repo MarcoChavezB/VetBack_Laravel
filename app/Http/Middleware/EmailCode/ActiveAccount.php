@@ -25,7 +25,7 @@ class ActiveAccount
         };
         
         if (!$user->account_active){
-            return response()->json(['msg' => 'Usuario no encontrado o deshabilitado'], 404);
+            return response()->json(['msg' => 'Usuario no encontrado o deshabilitado'], 423);
         }
 
         return $next($request);
